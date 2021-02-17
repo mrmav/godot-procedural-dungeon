@@ -320,10 +320,10 @@ namespace DungeonGenerator
             Room nest = Rooms.GetSpecialRoom(DungeonRoomType.Nest);
 
             // a boss room can only have one single connection
+            Rooms.RemoveEdge(boss, key);
+            Rooms.RemoveEdge(boss, playerSpawn);
             List<Room> connections = Rooms.GetEdges(boss).ToList<Room>();
             connections.Shuffle(Rng);
-            connections.Remove(key);          // fix for when a key room would spawn next to a dungeon room
-            connections.Remove(playerSpawn);
             connections.RemoveAt(0);
 
             for(int i = 0; i < connections.Count; i++)
@@ -331,7 +331,9 @@ namespace DungeonGenerator
                 Rooms.RemoveEdge(boss, connections[i]);
             }
 
-            // key rooms to have only one as well?
+            // key room can only have one single connection
+            Rooms.RemoveEdge(key, boss);
+            Rooms.RemoveEdge(key, playerSpawn);
             connections = Rooms.GetEdges(key).ToList<Room>();
             connections.Shuffle(Rng);
             connections.RemoveAt(0);
