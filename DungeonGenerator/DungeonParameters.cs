@@ -126,5 +126,10 @@ namespace DungeonGenerator
 
         }
 
+        public override string ToString()
+        {
+            return $"DungeonWidth: {DungeonWidth}\nDungeonHeight: {DungeonHeight}\nMinRoomWidth: {MinRoomWidth}\nMinRoomHeight: {MinRoomHeight}\nSplits: {Splits}\nSplitDeviation: {SplitDeviation}\nEdgeSharing: {EdgeSharing}\nAlgorithm: {Algorithm}\nSeed: {Seed}";            
+        }
+
     }
 }
