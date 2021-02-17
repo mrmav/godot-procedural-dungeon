@@ -98,7 +98,6 @@ namespace DungeonGenerator
             if (seed == "")
             {
                 string s = Guid.NewGuid().ToString("N");
-                Godot.GD.Print(Parameters);
                 Parameters.Seed = s.Substring(0, 6);
 
             }
@@ -323,6 +322,8 @@ namespace DungeonGenerator
             // a boss room can only have one single connection
             List<Room> connections = Rooms.GetEdges(boss).ToList<Room>();
             connections.Shuffle(Rng);
+            connections.Remove(key);          // fix for when a key room would spawn next to a dungeon room
+            connections.Remove(playerSpawn);
             connections.RemoveAt(0);
 
             for(int i = 0; i < connections.Count; i++)
@@ -395,6 +396,13 @@ namespace DungeonGenerator
                         smallest_f = open[i].fValue;
                         smallest_i = i;
                     }
+                }
+
+                if(smallest_i < 0)
+                {
+                    Console.WriteLine("smallest_i is "  + smallest_i);
+                    Console.WriteLine("dungeon parameters are:\n"  + Parameters.ToString());
+                    Console.WriteLine(open.Count);
                 }
 
                 closed.Add(current);
