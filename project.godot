@@ -57,10 +57,6 @@ zoom_out_wheel={
 
 file_logging/enable_file_logging=true
 
-[mono]
-
-debugger_agent/wait_for_debugger=true
-
 [rendering]
 
 environment/default_environment="res://default_env.tres"

@@ -46,6 +46,10 @@ class BuildDungeonTileMap : TileMap
                     int cellType = 1;
                     if(r.Type == DungeonRoomType.Boss)
                         cellType = 2;
+                    if(r.Type == DungeonRoomType.Key)
+                        cellType = 3;
+                    if(r.Type == DungeonRoomType.PlayerSpawn)
+                        cellType = 4;
 
                     SetCell(xx, yy, cellType);  
                 }
