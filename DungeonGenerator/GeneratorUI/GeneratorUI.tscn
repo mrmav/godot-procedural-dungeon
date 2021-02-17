@@ -1,0 +1,369 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://DungeonGenerator/GeneratorUI/GenerateButton.cs" type="Script" id=1]
+[ext_resource path="res://DungeonGenerator/GeneratorUI/SeedLabel.cs" type="Script" id=2]
+[ext_resource path="res://DungeonGenerator/GeneratorUI/Form.cs" type="Script" id=3]
+[ext_resource path="res://DungeonGenerator/GeneratorUI/DungeonTileMapShow.cs" type="Script" id=4]
+[ext_resource path="res://DungeonGenerator/GeneratorUI/DungeonDebugShow.cs" type="Script" id=5]
+
+[node name="GeneratorUI" type="CanvasLayer"]
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="Control"]
+anchor_bottom = 1.0
+margin_right = 246.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Panel"]
+margin_left = 1.0
+margin_right = 250.0
+margin_bottom = 32.0
+size_flags_vertical = 1
+text = "Dungeon Generator"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Form" type="VBoxContainer" parent="Control/Panel"]
+margin_left = 12.0
+margin_top = 34.0
+margin_right = 239.0
+margin_bottom = 268.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DungeonWidthTiles" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_right = 227.0
+margin_bottom = 24.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/DungeonWidthTiles"]
+margin_right = 149.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Dungeon Width (Tiles):"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/DungeonWidthTiles"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+min_value = 64.0
+max_value = 9999.0
+value = 256.0
+
+[node name="DungeonHeightTiles" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 28.0
+margin_right = 227.0
+margin_bottom = 52.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/DungeonHeightTiles"]
+margin_right = 149.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Dungeon Height (Tiles):"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/DungeonHeightTiles"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+min_value = 64.0
+max_value = 9999.0
+value = 256.0
+
+[node name="NumberOfSplits" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 56.0
+margin_right = 227.0
+margin_bottom = 80.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/NumberOfSplits"]
+margin_right = 149.0
+margin_bottom = 24.0
+hint_tooltip = "This is the number of splits that the Binary Sapce Partitioning tree will make. Keep in mind that this grows exponentially with the size of the dungeon."
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Num. of Splits"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/NumberOfSplits"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+min_value = 4.0
+max_value = 64.0
+value = 12.0
+
+[node name="DeviationForSplitting" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 84.0
+margin_right = 227.0
+margin_bottom = 108.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/DeviationForSplitting"]
+margin_right = 149.0
+margin_bottom = 24.0
+hint_tooltip = "This is the maximum offset from the center that the partitions can have when they are split."
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Splitting Deviation"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/DeviationForSplitting"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+max_value = 1.0
+step = 0.01
+value = 0.3
+
+[node name="MinimumRoomWidth" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 112.0
+margin_right = 227.0
+margin_bottom = 136.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/MinimumRoomWidth"]
+margin_right = 149.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Min. Room Width"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/MinimumRoomWidth"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+min_value = 8.0
+max_value = 64.0
+value = 16.0
+
+[node name="MinimumRoomHeight" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 140.0
+margin_right = 227.0
+margin_bottom = 164.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/MinimumRoomHeight"]
+margin_right = 149.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Min. Room Height"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/MinimumRoomHeight"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+min_value = 8.0
+max_value = 64.0
+value = 8.0
+
+[node name="MinEdgeSharing" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 168.0
+margin_right = 227.0
+margin_bottom = 192.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/MinEdgeSharing"]
+margin_right = 149.0
+margin_bottom = 24.0
+hint_tooltip = "The minimum edge share that the rooms need to be connected. Setting this to a value too close to 0 will give an error due to corner cases."
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Min. Edge Share Conn."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/MinEdgeSharing"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="PathFindingAlgo" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 196.0
+margin_right = 227.0
+margin_bottom = 216.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/PathFindingAlgo"]
+margin_right = 93.0
+margin_bottom = 20.0
+hint_tooltip = "The A* path finding heuristic type for connecting rooms. "
+mouse_filter = 1
+size_flags_vertical = 1
+text = "AI Algorithm   "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="Control/Panel/Form/PathFindingAlgo"]
+margin_left = 97.0
+margin_right = 227.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Manhattan"
+items = [ "Manhattan", null, false, 1, null, "Euclidean", null, false, 2, null, "Weight", null, false, 2, null ]
+selected = 0
+
+[node name="Seed" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 220.0
+margin_right = 227.0
+margin_bottom = 244.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/Seed"]
+margin_right = 39.0
+margin_bottom = 24.0
+hint_tooltip = "Seed to feed the RNG with."
+mouse_filter = 1
+size_flags_vertical = 1
+text = "Seed  "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="Control/Panel/Form/Seed"]
+margin_left = 43.0
+margin_right = 227.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+max_length = 8
+placeholder_text = "(Input seed or leave blank)"
+caret_blink = true
+
+[node name="Generate" type="Button" parent="Control/Panel"]
+margin_left = 20.0
+margin_top = 286.8
+margin_right = 229.0
+margin_bottom = 318.8
+text = "Generate"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel2" type="Panel" parent="Control"]
+margin_top = 328.0
+margin_bottom = 328.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel2"]
+margin_left = 13.0
+margin_right = 238.0
+margin_bottom = 84.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DungeonDebug" type="HBoxContainer" parent="Control/Panel2/VBoxContainer"]
+margin_right = 225.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Panel2/VBoxContainer/DungeonDebug"]
+margin_top = 13.0
+margin_right = 145.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Show dungeon debug:"
+
+[node name="CheckButton" type="CheckButton" parent="Control/Panel2/VBoxContainer/DungeonDebug"]
+margin_left = 149.0
+margin_right = 225.0
+margin_bottom = 40.0
+pressed = true
+script = ExtResource( 5 )
+
+[node name="ShowTileMap" type="HBoxContainer" parent="Control/Panel2/VBoxContainer"]
+margin_top = 44.0
+margin_right = 225.0
+margin_bottom = 84.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Panel2/VBoxContainer/ShowTileMap"]
+margin_top = 13.0
+margin_right = 145.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Show tile map:"
+
+[node name="CheckButton" type="CheckButton" parent="Control/Panel2/VBoxContainer/ShowTileMap"]
+margin_left = 149.0
+margin_right = 225.0
+margin_bottom = 40.0
+pressed = true
+script = ExtResource( 4 )
+
+[node name="SeedText" type="Label" parent="Control"]
+margin_left = 256.0
+margin_top = 8.0
+margin_right = 392.0
+margin_bottom = 22.0
+text = "(seed appears here)"
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 258.0
+margin_top = -24.0
+margin_right = 588.0
+margin_bottom = -10.0
+text = "Drag & Zoom In/Out to explore generated dungeon."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Control/Panel/Generate" to="Control/Panel/Generate" method="_on_Generate_pressed"]

@@ -1,0 +1,32 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://DungeonGenerator/Generator.cs" type="Script" id=1]
+[ext_resource path="res://TileLevel/tileset.tres" type="TileSet" id=2]
+[ext_resource path="res://TileLevel/BuildDungeonTileMap.cs" type="Script" id=3]
+[ext_resource path="res://PanCamera/PanCamera.tscn" type="PackedScene" id=4]
+[ext_resource path="res://DungeonGenerator/GeneratorUI/GeneratorUI.tscn" type="PackedScene" id=5]
+[ext_resource path="res://DungeonGenerator/Visualizer.cs" type="Script" id=6]
+[ext_resource path="res://TileLevel/TileLevelManager.cs" type="Script" id=7]
+
+[node name="TileLevel" type="Node"]
+script = ExtResource( 7 )
+
+[node name="GeneratorUI" parent="." instance=ExtResource( 5 )]
+
+[node name="Generator" type="Node" parent="."]
+script = ExtResource( 1 )
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 16, 16 )
+format = 1
+script = ExtResource( 3 )
+GeneratorNode = NodePath("../Generator")
+
+[node name="DungeonDebug" type="Node2D" parent="."]
+script = ExtResource( 6 )
+camera2DPath = NodePath("../Camera2D")
+GeneratorNode = NodePath("../Generator")
+DebugScale = 16.0
+
+[node name="Camera2D" parent="." instance=ExtResource( 4 )]
