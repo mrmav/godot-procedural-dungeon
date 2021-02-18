@@ -30,3 +30,4 @@ GeneratorNode = NodePath("../Generator")
 DebugScale = 16.0
 
 [node name="Camera2D" parent="." instance=ExtResource( 4 )]
+smoothing_speed = 8.0
