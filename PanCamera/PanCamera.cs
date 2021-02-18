@@ -8,10 +8,11 @@ public class PanCamera : Camera2D
     public float Sensitivity = 1.0f;
 
     private Vector2 previousMousePosition = Vector2.Zero;
+    private float _smoothness = 0.9f;
     public float _targetZoom = 1f;
     private float _currentZoom = 1f;
-    private float _zoomIncrement = 6f;
-    private uint _timeZoomTransition = 250;
+    private float _zoomIncrement = .5f;
+    private uint _timeZoomTransition = 2000;
     private uint _lastTimeZoom = 0;
     private uint _targetTime = 0;
 
@@ -38,19 +39,19 @@ public class PanCamera : Camera2D
         uint now = OS.GetTicksMsec();
         if(Input.IsActionJustReleased("zoom_in_wheel"))
         {            
-            _targetZoom -= _zoomIncrement * _targetZoom * delta;
+            _targetZoom -= _zoomIncrement;
             ResetZoomTimers(now);
         } else if(Input.IsActionJustReleased("zoom_out_wheel"))
         {
-            _targetZoom += _zoomIncrement * _targetZoom * delta;
+            _targetZoom += _zoomIncrement;
             ResetZoomTimers(now);
         }
 
         //interpolate value with time to zoom
-        _targetZoom = Mathf.Clamp(_targetZoom, 0.1f, 4f);
+        _targetZoom = Mathf.Clamp(_targetZoom, 0.2f, 4f);
         if(now < _targetTime)
         {
-            float _newZoom = Lerp(_currentZoom, _targetZoom, InvLerp(_lastTimeZoom, _targetTime, now));        
+            float _newZoom = Remap(_lastTimeZoom, _targetTime, _currentZoom, _targetZoom, now);     
             _currentZoom = _newZoom;
             Zoom = new Vector2(_currentZoom, _currentZoom);
         }
