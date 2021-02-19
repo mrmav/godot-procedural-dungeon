@@ -687,13 +687,6 @@ namespace DungeonGenerator
 
             }
 
-            Console.WriteLine("Detected merge cases:\n");
-            foreach(Room[] pair in possibleMerges)
-            {
-                Console.WriteLine($"{Rooms.GetNodeGuid(pair[0])} :: {Rooms.GetNodeGuid(pair[1])}");
-            }
-
-
             // remnove duplicate cases
             foreach(Room room in rooms)
             {
@@ -719,22 +712,9 @@ namespace DungeonGenerator
                 }
             }
 
-            //print merge cases:
-            Console.WriteLine("ACtual merge cases:\n");
-            foreach(Room[] pair in possibleMerges)
-            {
-                Console.WriteLine($"{Rooms.GetNodeGuid(pair[0])} :: {Rooms.GetNodeGuid(pair[1])}");
-            }
-
             foreach (Room[] pair in possibleMerges)
             {
                 Room r = _mergeRooms(pair[0], pair[1]);
-                
-                if(r != null)
-                {
-                    Console.WriteLine($"New merged room: {Rooms.GetNodeGuid(r)}");
-                }
-
             }
 
         }
