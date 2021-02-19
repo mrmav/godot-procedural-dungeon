@@ -648,43 +648,34 @@ namespace DungeonGenerator
 
         public void MergeRooms()
         {
-            Room[] rooms = Rooms.GetAllRooms().ToArray<Room>();
+            List<Room> rooms = Rooms.GetAllRooms();
+            List<Room[]> possibleMerges = new List<Room[]>(); 
 
             Console.WriteLine(Parameters + "\n");
 
-            for(int i = rooms.Count() - 1; i >= 0; i--)
+            foreach(Room r in rooms)
             {
                 
-                if(rooms[i] == null)
-                    continue;
-                
-                Room r = rooms[i];
-
-                // we skip special rooms, they have special needs
-                if(r.Type != DungeonRoomType.Base)
+                if(r == null)
                     continue;
 
                 // get neighbors
-                Room[] neighbors = Rooms.GetEdges(r).ToArray<Room>();
+                List<Room> neighbors = Rooms.GetEdges(r);
 
                 switch(Parameters.Merge)
                 {
                     case DungeonMergeRooms.WidthHeight:
-                    {
+                    {                        
                         
-                        // reverse cycle the neighbors list because we can remove neighbors when merging
-                        for(int j = neighbors.Count() - 1; j >= 0; j--)
+                        foreach(Room n in neighbors)
                         {
-
-                            if(neighbors[j] == null)
+                            if(n == null)
                                 continue;
 
-                            Room n = neighbors[j];
-                            Console.WriteLine($"\nProcessing neighbor {Rooms.GetNodeGuid(n)} with index {j}...");
-
-                            bool sucess = _mergeRooms(r, n);
-                            
-                            Console.WriteLine($"\nOne merge completed with: {sucess}.");
+                            if(_checkPossibleMerge(r, n))
+                            {
+                                possibleMerges.Add(new Room[] {r, n});
+                            }
 
                         }
                         break;
@@ -692,6 +683,56 @@ namespace DungeonGenerator
                     default:
                         break;
 
+                }
+
+            }
+
+            Console.WriteLine("Detected merge cases:\n");
+            foreach(Room[] pair in possibleMerges)
+            {
+                Console.WriteLine($"{Rooms.GetNodeGuid(pair[0])} :: {Rooms.GetNodeGuid(pair[1])}");
+            }
+
+
+            // remnove duplicate cases
+            foreach(Room room in rooms)
+            {
+                int count = 0;
+
+                for(int i = possibleMerges.Count - 1; i >= 0; i--)
+                {
+
+                    Room[] checkPair = possibleMerges[i];
+
+                    // in how many pairs does a room appear?
+                    if(room == checkPair[0] || room == checkPair[1])
+                    {
+                        count++;
+                    }
+
+                    if(count > 1)
+                    {
+                        possibleMerges.RemoveAt(i);
+                        count--;
+                    }
+
+                }
+            }
+
+            //print merge cases:
+            Console.WriteLine("ACtual merge cases:\n");
+            foreach(Room[] pair in possibleMerges)
+            {
+                Console.WriteLine($"{Rooms.GetNodeGuid(pair[0])} :: {Rooms.GetNodeGuid(pair[1])}");
+            }
+
+            foreach (Room[] pair in possibleMerges)
+            {
+                Room r = _mergeRooms(pair[0], pair[1]);
+                
+                if(r != null)
+                {
+                    Console.WriteLine($"New merged room: {Rooms.GetNodeGuid(r)}");
                 }
 
             }

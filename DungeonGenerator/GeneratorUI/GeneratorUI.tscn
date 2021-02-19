@@ -191,7 +191,7 @@ __meta__ = {
 margin_left = 153.0
 margin_right = 227.0
 margin_bottom = 24.0
-min_value = 8.0
+min_value = 3.0
 max_value = 64.0
 value = 16.0
 
@@ -215,7 +215,7 @@ __meta__ = {
 margin_left = 153.0
 margin_right = 227.0
 margin_bottom = 24.0
-min_value = 8.0
+min_value = 3.0
 max_value = 64.0
 value = 8.0
 

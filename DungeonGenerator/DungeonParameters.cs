@@ -113,11 +113,11 @@ namespace DungeonGenerator
         }     
 
         public DungeonParameters(
-            int w = 106, 
-            int h = 106, 
-            int roomW = 8, 
-            int roomH = 8, 
-            int splits = 14, 
+            int w = 80, 
+            int h = 80, 
+            int roomW = 6, 
+            int roomH = 3, 
+            int splits = 8, 
             float dev = 0.15f, 
             float edgeShare = 0.2f, 
             DungeonHeuristic algo = DungeonHeuristic.Weight, 
