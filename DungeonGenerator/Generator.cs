@@ -38,7 +38,9 @@ namespace DungeonGenerator
                 dungeon.GenerateRooms();
                 dungeon.BuildGraph();
                 dungeon.ConnectDungeonRooms();
-                dungeon.GenerateDoors();
+                dungeon.MergeRooms();
+                dungeon.GenerateDoors();                
+
             } catch(Exception e)
             {
                 Console.WriteLine("There was a problem generating the dungeon...\n");

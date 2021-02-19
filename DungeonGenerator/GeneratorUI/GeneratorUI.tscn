@@ -191,7 +191,7 @@ __meta__ = {
 margin_left = 153.0
 margin_right = 227.0
 margin_bottom = 24.0
-min_value = 8.0
+min_value = 3.0
 max_value = 64.0
 value = 16.0
 
@@ -215,7 +215,7 @@ __meta__ = {
 margin_left = 153.0
 margin_right = 227.0
 margin_bottom = 24.0
-min_value = 8.0
+min_value = 3.0
 max_value = 64.0
 value = 8.0
 
@@ -271,10 +271,36 @@ text = "Manhattan"
 items = [ "Manhattan", null, false, 1, null, "Euclidean", null, false, 2, null, "Weight", null, false, 2, null ]
 selected = 0
 
-[node name="Seed" type="HBoxContainer" parent="Control/Panel/Form"]
+[node name="MergeOption" type="HBoxContainer" parent="Control/Panel/Form"]
 margin_top = 220.0
 margin_right = 227.0
-margin_bottom = 244.0
+margin_bottom = 240.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/MergeOption"]
+margin_right = 112.0
+margin_bottom = 20.0
+hint_tooltip = "The A* path finding heuristic type for connecting rooms. "
+mouse_filter = 1
+size_flags_vertical = 1
+text = "Room Merging     "
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="Control/Panel/Form/MergeOption"]
+margin_left = 116.0
+margin_right = 227.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "NoMerge"
+items = [ "NoMerge", null, false, 0, null, "WidthHeight", null, false, 1, null ]
+selected = 0
+
+[node name="Seed" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 244.0
+margin_right = 227.0
+margin_bottom = 268.0
 
 [node name="Label" type="Label" parent="Control/Panel/Form/Seed"]
 margin_right = 39.0
@@ -302,9 +328,9 @@ SeedLabelPath = NodePath("../../../../SeedText")
 
 [node name="Generate" type="Button" parent="Control/Panel"]
 margin_left = 20.0
-margin_top = 286.8
+margin_top = 311.0
 margin_right = 229.0
-margin_bottom = 318.8
+margin_bottom = 343.0
 text = "Generate"
 script = ExtResource( 1 )
 __meta__ = {
@@ -313,8 +339,8 @@ __meta__ = {
 }
 
 [node name="Panel2" type="Panel" parent="Control"]
-margin_top = 328.0
-margin_bottom = 328.0
+margin_top = 356.0
+margin_bottom = 356.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {

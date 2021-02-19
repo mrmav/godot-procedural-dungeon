@@ -20,6 +20,7 @@ class Form : Node
         GetNode<SpinBox>("MinEdgeSharing/SpinBox").Value = p.EdgeSharing;
 
         GetNode<OptionButton>("PathFindingAlgo/OptionButton").Selected = (int)p.Algorithm;
+        GetNode<OptionButton>("MergeOption/OptionButton").Selected = (int)p.Merge;
         
         GetNode<LineEdit>("Seed/LineEdit").Text = p.Seed;
        

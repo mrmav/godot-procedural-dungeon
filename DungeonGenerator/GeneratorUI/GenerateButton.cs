@@ -28,6 +28,7 @@ public class GenerateButton : Button
         float edgeShare = (float)GetNode<SpinBox>("../Form/MinEdgeSharing/SpinBox").Value;
 
         int algorithm = GetNode<OptionButton>("../Form/PathFindingAlgo/OptionButton").Selected;
+        int merge = GetNode<OptionButton>("../Form/MergeOption/OptionButton").Selected;
         
         string seed = GetNode<LineEdit>("../Form/Seed/LineEdit").Text;
 
@@ -41,6 +42,7 @@ public class GenerateButton : Button
             splitDeviation,
             edgeShare,
             (DungeonHeuristic)algorithm,
+            (DungeonMergeRooms)merge,
             seed
         );
 

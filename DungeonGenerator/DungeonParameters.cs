@@ -12,6 +12,7 @@ namespace DungeonGenerator
         private float _splitDeviation;        
         private float _edgeSharing;
         public DungeonHeuristic Algorithm;
+        public DungeonMergeRooms Merge;
         public string Seed;
 
         /// <summary>
@@ -111,7 +112,17 @@ namespace DungeonGenerator
             }
         }     
 
-        public DungeonParameters(int w = 128, int h = 128, int roomW = 8, int roomH = 8, int splits = 14, float dev = 0.35f, float edgeShare = 0.2f, DungeonHeuristic algo = DungeonHeuristic.Weight, string seed = "")
+        public DungeonParameters(
+            int w = 80, 
+            int h = 80, 
+            int roomW = 6, 
+            int roomH = 3, 
+            int splits = 8, 
+            float dev = 0.15f, 
+            float edgeShare = 0.2f, 
+            DungeonHeuristic algo = DungeonHeuristic.Weight, 
+            DungeonMergeRooms merge = DungeonMergeRooms.NoMerge, 
+            string seed = "")
         {
 
             DungeonWidth = w;
@@ -122,13 +133,14 @@ namespace DungeonGenerator
             SplitDeviation = dev;
             EdgeSharing = edgeShare;
             Algorithm = algo;
+            Merge = merge;
             Seed = seed;
 
         }
 
         public override string ToString()
         {
-            return $"DungeonWidth: {DungeonWidth}\nDungeonHeight: {DungeonHeight}\nMinRoomWidth: {MinRoomWidth}\nMinRoomHeight: {MinRoomHeight}\nSplits: {Splits}\nSplitDeviation: {SplitDeviation}\nEdgeSharing: {EdgeSharing}\nAlgorithm: {Algorithm}\nSeed: {Seed}";            
+            return $"DungeonWidth: {DungeonWidth}\nDungeonHeight: {DungeonHeight}\nMinRoomWidth: {MinRoomWidth}\nMinRoomHeight: {MinRoomHeight}\nSplits: {Splits}\nSplitDeviation: {SplitDeviation}\nEdgeSharing: {EdgeSharing}\nAlgorithm: {Algorithm}\nMerge: {Merge}\nSeed: {Seed}";            
         }
 
     }
