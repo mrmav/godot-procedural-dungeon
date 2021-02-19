@@ -648,64 +648,43 @@ namespace DungeonGenerator
 
         public void MergeRooms()
         {
-            List<Room> rooms = Rooms.GetAllRooms();
+            Room[] rooms = Rooms.GetAllRooms().ToArray<Room>();
 
-            Console.WriteLine(Parameters);
+            Console.WriteLine(Parameters + "\n");
 
-            foreach (Room r in rooms)
+            for(int i = rooms.Count() - 1; i >= 0; i--)
             {
+                
+                if(rooms[i] == null)
+                    continue;
+                
+                Room r = rooms[i];
+
                 // we skip special rooms, they have special needs
                 if(r.Type != DungeonRoomType.Base)
                     continue;
 
                 // get neighbors
-                List<Room> neighbors = Rooms.GetEdges(r);                
+                Room[] neighbors = Rooms.GetEdges(r).ToArray<Room>();
 
                 switch(Parameters.Merge)
                 {
                     case DungeonMergeRooms.WidthHeight:
                     {
-                        foreach (Room n in neighbors)
+                        
+                        // reverse cycle the neighbors list because we can remove neighbors when merging
+                        for(int j = neighbors.Count() - 1; j >= 0; j--)
                         {
-                            // we skip special rooms, they have special needs
-                            if(n.Type != DungeonRoomType.Base)
+
+                            if(neighbors[j] == null)
                                 continue;
 
-                            bool horizontalNeighbors = r.Partition.Y == n.Partition.Y && r.Partition.Height == n.Partition.Height;
-                            bool verticalNeighbors   = r.Partition.X == n.Partition.X && r.Partition.Width == n.Partition.Width;
+                            Room n = neighbors[j];
+                            Console.WriteLine($"\nProcessing neighbor {Rooms.GetNodeGuid(n)} with index {j}...");
+
+                            bool sucess = _mergeRooms(r, n);
                             
-                            if(horizontalNeighbors || verticalNeighbors)
-                            {
-                                
-                                Console.WriteLine("\nOne merge case detected.");
-
-                                // do to the nature of our dungeon structure (binary space partition tree),
-                                // we can only perform the merge if the rooms are siblings in the BSP itself
-                                // hopefully, this will be the majority of the times.
-                                // the deviation parameter will "ensure" that only siblings share sides.
-                                if(n.Partition == r.Partition.GetSibling())
-                                {
-                                    // preserve the connections:
-                                    List<Room> connections = Rooms.GetEdges(r).ToList<Room>();
-                                    connections.AddRange(Rooms.GetEdges(n).ToList<Room>());
-                                    
-                                    // the newly, bigger, merged room
-                                    Room newRoom = new Room(this, r.Partition.Parent, DungeonRoomType.Base);
-
-                                    Rooms.RemoveNode(r);
-                                    Rooms.RemoveNode(n);
-                                    r.Partition.KillChildren();
-
-                                    Rooms.AddRoom(newRoom);
-                                    
-                                    foreach (Room edge in connections)
-                                    {
-                                        Rooms.Connect(newRoom, edge);
-                                    }
-
-                                }
-
-                            }
+                            Console.WriteLine($"\nOne merge completed with: {sucess}.");
 
                         }
                         break;
@@ -717,6 +696,55 @@ namespace DungeonGenerator
 
             }
 
+        }
+
+        private bool _mergeRooms(Room a, Room b)
+        {
+            bool sucess = false;
+
+            // we skip special rooms, they have special needs
+            if(a.Type != DungeonRoomType.Base || b.Type != DungeonRoomType.Base)
+                return sucess;
+
+
+            bool horizontalNeighbors = a.Partition.Y == b.Partition.Y && a.Partition.Height == b.Partition.Height;
+            bool verticalNeighbors   = a.Partition.X == b.Partition.X && a.Partition.Width == b.Partition.Width;
+            
+            if(horizontalNeighbors || verticalNeighbors)
+            {
+                
+                Console.WriteLine("\nOne merge case detected.");
+
+                // do to the nature of our dungeon structure (binary space partition tree),
+                // we can only perform the merge if the rooms are siblings in the BSP itself
+                // hopefully, this will be the majority of the times.
+                // the deviation parameter will "ensure" that only siblings share sides.
+                if(a.Partition == b.Partition.GetSibling())
+                {
+                    // preserve the connections:
+                    List<Room> connections = Rooms.GetEdges(a).ToList<Room>();
+                    connections.AddRange(Rooms.GetEdges(b).ToList<Room>());
+                    connections.Remove(a);
+                    connections.Remove(b);
+                    
+                    // the newly, bigger, merged room
+                    Room newRoom = new Room(this, a.Partition.Parent, DungeonRoomType.Base);
+
+                    Rooms.RemoveNode(a);
+                    Rooms.RemoveNode(b);
+                    a.Partition.Parent.KillChildren();
+
+                    bool addSucess = Rooms.AddRoom(newRoom);
+                    
+                    foreach (Room edge in connections)
+                    {
+                        Rooms.Connect(newRoom, edge);
+                    }
+
+                    sucess = true;
+                }
+            }
+            return sucess;
         }
 
         private bool ListHasInitAndFinal(List<Room> specials)

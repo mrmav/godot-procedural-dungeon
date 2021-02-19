@@ -19,7 +19,7 @@ namespace DungeonGenerator
 
         }
 
-        private string GetNodeGuid(T node)
+        public string GetNodeGuid(T node)
         {
             int index = Nodes.IndexOf(node);
 
