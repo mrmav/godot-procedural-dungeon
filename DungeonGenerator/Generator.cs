@@ -32,19 +32,21 @@ namespace DungeonGenerator
             dungeon = new Dungeon(parameters);
             
 
-            try
-            {
+            // try
+            // {
                 dungeon.GeneratePartitioning();
                 dungeon.GenerateRooms();
                 dungeon.BuildGraph();
                 dungeon.ConnectDungeonRooms();
-                dungeon.GenerateDoors();
-            } catch(Exception e)
-            {
-                Console.WriteLine("There was a problem generating the dungeon...\n");
-                Console.WriteLine(dungeon.Parameters);
-                Console.WriteLine(e.Message);
-            }
+                dungeon.MergeRooms();
+                dungeon.GenerateDoors();                
+
+            // } catch(Exception e)
+            // {
+            //     Console.WriteLine("There was a problem generating the dungeon...\n");
+            //     Console.WriteLine(dungeon.Parameters);
+            //     Console.WriteLine(e.Message);
+            // }
 
             EmitSignal(nameof(OnGeneratedDungeon), dungeon);
 

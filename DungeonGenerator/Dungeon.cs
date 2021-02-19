@@ -42,6 +42,12 @@ namespace DungeonGenerator
         Weight
     }
 
+    public enum DungeonMergeRooms
+    {
+        NoMerge,
+        WidthHeight
+    }
+
     enum DungeonConnectivity
     {
         SinglePath,
@@ -633,6 +639,79 @@ namespace DungeonGenerator
                     d = new Door(x, y, current, edge);
 
                     Rooms.Doors.Add(d);
+
+                }
+
+            }
+
+        }
+
+        public void MergeRooms()
+        {
+            List<Room> rooms = Rooms.GetAllRooms();
+
+            Console.WriteLine(Parameters);
+
+            foreach (Room r in rooms)
+            {
+                // we skip special rooms, they have special needs
+                if(r.Type != DungeonRoomType.Base)
+                    continue;
+
+                // get neighbors
+                List<Room> neighbors = Rooms.GetEdges(r);                
+
+                switch(Parameters.Merge)
+                {
+                    case DungeonMergeRooms.WidthHeight:
+                    {
+                        foreach (Room n in neighbors)
+                        {
+                            // we skip special rooms, they have special needs
+                            if(n.Type != DungeonRoomType.Base)
+                                continue;
+
+                            bool horizontalNeighbors = r.Partition.Y == n.Partition.Y && r.Partition.Height == n.Partition.Height;
+                            bool verticalNeighbors   = r.Partition.X == n.Partition.X && r.Partition.Width == n.Partition.Width;
+                            
+                            if(horizontalNeighbors || verticalNeighbors)
+                            {
+                                
+                                Console.WriteLine("\nOne merge case detected.");
+
+                                // do to the nature of our dungeon structure (binary space partition tree),
+                                // we can only perform the merge if the rooms are siblings in the BSP itself
+                                // hopefully, this will be the majority of the times.
+                                // the deviation parameter will "ensure" that only siblings share sides.
+                                if(n.Partition == r.Partition.GetSibling())
+                                {
+                                    // preserve the connections:
+                                    List<Room> connections = Rooms.GetEdges(r).ToList<Room>();
+                                    connections.AddRange(Rooms.GetEdges(n).ToList<Room>());
+                                    
+                                    // the newly, bigger, merged room
+                                    Room newRoom = new Room(this, r.Partition.Parent, DungeonRoomType.Base);
+
+                                    Rooms.RemoveNode(r);
+                                    Rooms.RemoveNode(n);
+                                    r.Partition.KillChildren();
+
+                                    Rooms.AddRoom(newRoom);
+                                    
+                                    foreach (Room edge in connections)
+                                    {
+                                        Rooms.Connect(newRoom, edge);
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                        break;
+                    }
+                    default:
+                        break;
 
                 }
 
