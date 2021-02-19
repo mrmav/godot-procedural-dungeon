@@ -698,53 +698,57 @@ namespace DungeonGenerator
 
         }
 
-        private bool _mergeRooms(Room a, Room b)
+        private bool _checkPossibleMerge(Room a, Room b)
         {
             bool sucess = false;
+
+            if(a == null || b == null)
+                return sucess;
 
             // we skip special rooms, they have special needs
             if(a.Type != DungeonRoomType.Base || b.Type != DungeonRoomType.Base)
                 return sucess;
-
 
             bool horizontalNeighbors = a.Partition.Y == b.Partition.Y && a.Partition.Height == b.Partition.Height;
             bool verticalNeighbors   = a.Partition.X == b.Partition.X && a.Partition.Width == b.Partition.Width;
             
             if(horizontalNeighbors || verticalNeighbors)
             {
-                
-                Console.WriteLine("\nOne merge case detected.");
-
                 // do to the nature of our dungeon structure (binary space partition tree),
                 // we can only perform the merge if the rooms are siblings in the BSP itself
                 // hopefully, this will be the majority of the times.
                 // the deviation parameter will "ensure" that only siblings share sides.
                 if(a.Partition == b.Partition.GetSibling())
-                {
-                    // preserve the connections:
-                    List<Room> connections = Rooms.GetEdges(a).ToList<Room>();
-                    connections.AddRange(Rooms.GetEdges(b).ToList<Room>());
-                    connections.Remove(a);
-                    connections.Remove(b);
-                    
-                    // the newly, bigger, merged room
-                    Room newRoom = new Room(this, a.Partition.Parent, DungeonRoomType.Base);
-
-                    Rooms.RemoveNode(a);
-                    Rooms.RemoveNode(b);
-                    a.Partition.Parent.KillChildren();
-
-                    bool addSucess = Rooms.AddRoom(newRoom);
-                    
-                    foreach (Room edge in connections)
-                    {
-                        Rooms.Connect(newRoom, edge);
-                    }
-
+                {                    
                     sucess = true;
                 }
             }
             return sucess;
+        }
+
+        private Room _mergeRooms(Room a, Room b)
+        {
+            // preserve the connections:
+            List<Room> connections = Rooms.GetEdges(a).ToList<Room>();
+            connections.AddRange(Rooms.GetEdges(b).ToList<Room>());
+            connections.Remove(a);
+            connections.Remove(b);
+            
+            // the newly, bigger, merged room
+            Room newRoom = new Room(this, a.Partition.Parent, DungeonRoomType.Base);
+
+            Rooms.RemoveNode(a);
+            Rooms.RemoveNode(b);
+            a.Partition.Parent.KillChildren();
+
+            bool addSucess = Rooms.AddRoom(newRoom);
+            
+            foreach (Room edge in connections)
+            {
+                Rooms.Connect(newRoom, edge);
+            }
+
+            return newRoom;
         }
 
         private bool ListHasInitAndFinal(List<Room> specials)
