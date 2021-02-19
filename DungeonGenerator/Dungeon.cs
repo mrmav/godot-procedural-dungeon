@@ -651,8 +651,6 @@ namespace DungeonGenerator
             List<Room> rooms = Rooms.GetAllRooms();
             List<Room[]> possibleMerges = new List<Room[]>(); 
 
-            Console.WriteLine(Parameters + "\n");
-
             foreach(Room r in rooms)
             {
                 
