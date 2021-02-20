@@ -633,8 +633,8 @@ namespace DungeonGenerator
                                     openingX = edge.Partition.X2;
                                 }
 
-                                int y1 = current.Partition.Y1 + 1;  // we remove/add 1, so it creates a little 'pillar' next to the walls
-                                int y2 = current.Partition.Y2 - 1;
+                                int y1 = current.Partition.Y1 + 2;  // we remove/add 1, so it creates a little 'pillar' next to the walls
+                                int y2 = current.Partition.Y2 - 2;
 
                                 // TODO: check duplication of openings creation because there is no check if 
                                 // an opening was already created due to all rooms vs edges being checked

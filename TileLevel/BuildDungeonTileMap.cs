@@ -95,7 +95,7 @@ class BuildDungeonTileMap : TileMap
             {
                 for(int y = o.Y1; y <= o.Y2; y++)
                 {
-                    SetCell(x, y, 5);
+                    SetCell(x, y, 1);
                 }
             }
 
