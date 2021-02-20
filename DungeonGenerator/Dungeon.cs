@@ -591,9 +591,9 @@ namespace DungeonGenerator
             return result;
         }
 
-        public void GenerateDoors()
+        public void GeneratePassages()
         {
-            // for all edges, generate a door
+            // for all edges, generate a passage
             for(int i = 0; i < Rooms.Rooms.Count; i++)
             {
                 Room current = Rooms.Rooms[i];
@@ -602,8 +602,15 @@ namespace DungeonGenerator
 
                 foreach(Room edge in edges)
                 {
-                    // get the middle of the overlaping edge
 
+                    // let us think about if we want to make a door, a just a passage (opening between rooms)
+                    // should we have a parameter to define the frequency of big openings? 
+                    // maybe like Parameters.Openness (0.0f to 1.0f), where if 1, only generate openings.
+
+                    int chance = (int)Utils.RandomBetween(Rng, 1, 100);
+                    bool opening = chance < Parameters.Openness * 100;
+
+                    // get the middle of the overlaping edge
                     int verticalOverlap = current.Partition.CheckVerticalOverlap(edge.Partition);
                     int horizontalOverlap = current.Partition.CheckHorizontalOverlap(edge.Partition);
 
@@ -686,6 +693,13 @@ namespace DungeonGenerator
                     if(n == null)
                         continue;
 
+                    // do to the nature of our dungeon structure (binary space partition tree),
+                    // we can only perform the merge if the rooms are siblings in the BSP itself
+                    // hopefully, this will be the majority of the times.
+                    // the deviation parameter will "ensure" that only siblings share sides.
+                    if(r.Partition != n.Partition.GetSibling())
+                        continue;
+
                     if(_checkPossibleMerge(r, n))
                     {
                         possibleMerges.Add(new Room[] {r, n});
@@ -737,15 +751,6 @@ namespace DungeonGenerator
             // we skip special rooms, they have special needs
             if(a.Type != DungeonRoomType.Base || b.Type != DungeonRoomType.Base)
                 return sucess;
-
-            // do to the nature of our dungeon structure (binary space partition tree),
-            // we can only perform the merge if the rooms are siblings in the BSP itself
-            // hopefully, this will be the majority of the times.
-            // the deviation parameter will "ensure" that only siblings share sides.
-            if(a.Partition != b.Partition.GetSibling())
-            {                                    
-                return sucess;
-            }
 
             bool horizontalNeighbors = a.Partition.Y == b.Partition.Y && a.Partition.Height == b.Partition.Height;
             bool verticalNeighbors   = a.Partition.X == b.Partition.X && a.Partition.Width == b.Partition.Width;
