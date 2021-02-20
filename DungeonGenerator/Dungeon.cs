@@ -606,125 +606,127 @@ namespace DungeonGenerator
                     // let us think about if we want to make a door, a just a passage (opening between rooms)
                     // should we have a parameter to define the frequency of big openings? 
                     // maybe like Parameters.Openness (0.0f to 1.0f), where if 1, only generate openings.
+                                            
+                    bool openingChance = ((int)Utils.RandomBetween(Rng, 1, 100)) < (Parameters.Openness * 100);
 
-                    int chance = (int)Utils.RandomBetween(Rng, 1, 100);
-                    bool opening = chance < Parameters.Openness * 100;
-
-                    if(opening)
+                    if(openingChance)
                     {
-                        bool horizontalNeighbors = current.Partition.Y == edge.Partition.Y && current.Partition.Height == edge.Partition.Height;
-                        bool verticalNeighbors   = current.Partition.X == edge.Partition.X && current.Partition.Width  == edge.Partition.Width;
-
-                        if(horizontalNeighbors)
+                        if(current.Type == DungeonRoomType.Base && edge.Type == DungeonRoomType.Base)
                         {
-                            // get the right edge of the left most neighbour
-                            int openingX;
 
-                            if(current.Partition.X1 < edge.Partition.X1)
+                            bool horizontalNeighbors = current.Partition.Y == edge.Partition.Y && current.Partition.Height == edge.Partition.Height;
+                            bool verticalNeighbors   = current.Partition.X == edge.Partition.X && current.Partition.Width  == edge.Partition.Width;
+
+                            if(horizontalNeighbors)
                             {
-                                // current is on the left side
-                                // lets add x + width to get opening x
-                                openingX = current.Partition.X2;
-                            } else
+                                // get the right edge of the left most neighbour
+                                int openingX;
+
+                                if(current.Partition.X1 < edge.Partition.X1)
+                                {
+                                    // current is on the left side
+                                    // lets add x + width to get opening x
+                                    openingX = current.Partition.X2;
+                                } else
+                                {
+                                    // edge is on the left side
+                                    openingX = edge.Partition.X2;
+                                }
+
+                                int y1 = current.Partition.Y1 + 1;  // we remove/add 1, so it creates a little 'pillar' next to the walls
+                                int y2 = current.Partition.Y2 - 1;
+
+                                // TODO: check duplication of openings creation because there is no check if 
+                                // an opening was already created due to all rooms vs edges being checked
+                                Rooms.Openings.Add(new Opening(openingX, y1, openingX, y2, current, edge));
+
+                            } else if(verticalNeighbors)
                             {
-                                // edge is on the left side
-                                openingX = edge.Partition.X2;
+                                // get the bottom edge of the top most neighbour
+                                int openingY;
+
+                                if(current.Partition.Y1 < edge.Partition.Y1)
+                                {
+                                    // current is on the top side
+                                    // lets add y + height to get opening y
+                                    openingY = current.Partition.Y2;
+                                } else
+                                {
+                                    // edge is on the top side
+                                    openingY = edge.Partition.Y2;
+                                }
+
+                                int x1 = current.Partition.X1 + 2;  // we remove/add 2, so it creates a little 'pillar' next to the walls
+                                int x2 = current.Partition.X2 - 2;
+
+                                // TODO: check duplication of openings creation because there is no check if 
+                                // an opening was already created due to all rooms vs edges being checked
+                                Rooms.Openings.Add(new Opening(x1, openingY, x2, openingY, current, edge));
+                                continue;
                             }
 
-                            int y1 = current.Partition.Y1 + 1;  // we remove/add 1, so it creates a little 'pillar' next to the walls
-                            int y2 = current.Partition.Y2 - 1;
-
-                            // TODO: check duplication of openings creation because there is no check if 
-                            // an opening was already created due to all rooms vs edges being checked
-                            Rooms.Openings.Add(new Opening(openingX, y1, openingX, y2, current, edge));
-
-                        } else if(verticalNeighbors)
-                        {
-                            // get the bottom edge of the top most neighbour
-                            int openingY;
-
-                            if(current.Partition.Y1 < edge.Partition.Y1)
-                            {
-                                // current is on the top side
-                                // lets add y + height to get opening y
-                                openingY = current.Partition.Y2;
-                            } else
-                            {
-                                // edge is on the top side
-                                openingY = edge.Partition.Y2;
-                            }
-
-                            int x1 = current.Partition.X1 + 1;  // we remove/add 1, so it creates a little 'pillar' next to the walls
-                            int x2 = current.Partition.X2 - 1;
-
-                            // TODO: check duplication of openings creation because there is no check if 
-                            // an opening was already created due to all rooms vs edges being checked
-                            Rooms.Openings.Add(new Opening(x1, openingY, x2, openingY, current, edge));
                         }
-
-                    } else
-                    {
-
-                        // get the middle of the overlaping edge
-                        int verticalOverlap = current.Partition.CheckVerticalOverlap(edge.Partition);
-                        int horizontalOverlap = current.Partition.CheckHorizontalOverlap(edge.Partition);
-
-                        int x, y;
-                        Door d;
-
-                        if(verticalOverlap > 0)
-                        {
-                            // if it is a vertical overlap
-                            // we need to know from each side it is
-
-                            if(current.Partition.X1 < edge.Partition.X1)
-                            {
-                                // the current is on the right side
-
-                                x = current.Partition.X2;
-
-                            } else
-                            {
-                                x = current.Partition.X1;
-                            }
-
-                            y = Math.Max(current.Partition.Y1, edge.Partition.Y1) + verticalOverlap / 2;
-
-                        } else if(horizontalOverlap > 0)
-                        {
-                            // an horizontal overlap means
-                            // that we need to know whos
-                            // on top
-
-                            if(current.Partition.Y1 < edge.Partition.Y1)
-                            {
-                                // the current is on top
-
-                                y = current.Partition.Y2;
-
-                            } else
-                            {
-                                y = current.Partition.Y1;
-                            }
-
-                            x = Math.Max(current.Partition.X1, edge.Partition.X1) + horizontalOverlap / 2;
-                        } else
-                        {
-                            // this should not happen.
-                            // this will mean that the rooms are sharing 
-                            // only a corner vertice.
-                            // check dungeon parameters.
-                            Console.WriteLine("DUNGEON::DOORS::ERROR: a vertice case was found!");
-                            continue;
-                        }
-
-                        // TODO: check duplication of doors creation because there is no check if 
-                        // a door was already created due to all rooms vs edges being checked
-                        d = new Door(x, y, current, edge);
-
-                        Rooms.Doors.Add(d);
 
                     }
+
+                    // get the middle of the overlaping edge
+                    int verticalOverlap = current.Partition.CheckVerticalOverlap(edge.Partition);
+                    int horizontalOverlap = current.Partition.CheckHorizontalOverlap(edge.Partition);
+
+                    int x, y;
+                    Door d;
+
+                    if(verticalOverlap > 0)
+                    {
+                        // if it is a vertical overlap
+                        // we need to know from each side it is
+
+                        if(current.Partition.X1 < edge.Partition.X1)
+                        {
+                            // the current is on the right side
+
+                            x = current.Partition.X2;
+
+                        } else
+                        {
+                            x = current.Partition.X1;
+                        }
+
+                        y = Math.Max(current.Partition.Y1, edge.Partition.Y1) + verticalOverlap / 2;
+
+                    } else if(horizontalOverlap > 0)
+                    {
+                        // an horizontal overlap means
+                        // that we need to know whos
+                        // on top
+
+                        if(current.Partition.Y1 < edge.Partition.Y1)
+                        {
+                            // the current is on top
+
+                            y = current.Partition.Y2;
+
+                        } else
+                        {
+                            y = current.Partition.Y1;
+                        }
+
+                        x = Math.Max(current.Partition.X1, edge.Partition.X1) + horizontalOverlap / 2;
+                    } else
+                    {
+                        // this should not happen.
+                        // this will mean that the rooms are sharing 
+                        // only a corner vertice.
+                        // check dungeon parameters.
+                        Console.WriteLine("DUNGEON::DOORS::ERROR: a vertice case was found!");
+                        continue;
+                    }
+
+                    // TODO: check duplication of doors creation because there is no check if 
+                    // a door was already created due to all rooms vs edges being checked
+                    d = new Door(x, y, current, edge);
+
+                    Rooms.Doors.Add(d);
 
                 }
 
