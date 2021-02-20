@@ -26,6 +26,7 @@ public class GenerateButton : Button
         int roomHeight = (int)GetNode<SpinBox>("../Form/MinimumRoomHeight/SpinBox").Value;
 
         int edgeShare = (int)GetNode<SpinBox>("../Form/MinEdgeSharing/SpinBox").Value;
+        int openness = (int)GetNode<SpinBox>("../Form/Openness/SpinBox").Value;
 
         int algorithm = GetNode<OptionButton>("../Form/PathFindingAlgo/OptionButton").Selected;
         int merge = GetNode<OptionButton>("../Form/MergeOption/OptionButton").Selected;
@@ -41,6 +42,7 @@ public class GenerateButton : Button
             splits,
             splitDeviation,
             edgeShare,
+            openness,
             (DungeonHeuristic)algorithm,
             (DungeonMergeRooms)merge,
             seed

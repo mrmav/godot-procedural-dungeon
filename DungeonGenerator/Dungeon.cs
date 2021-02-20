@@ -612,12 +612,56 @@ namespace DungeonGenerator
 
                     if(opening)
                     {
-                        if(_checkPossibleMerge(current, edge))
+                        bool horizontalNeighbors = current.Partition.Y == edge.Partition.Y && current.Partition.Height == edge.Partition.Height;
+                        bool verticalNeighbors   = current.Partition.X == edge.Partition.X && current.Partition.Width  == edge.Partition.Width;
+
+                        if(horizontalNeighbors)
                         {
-                            // make the opening
+                            // get the right edge of the left most neighbour
+                            int openingX;
 
+                            if(current.Partition.X1 < edge.Partition.X1)
+                            {
+                                // current is on the left side
+                                // lets add x + width to get opening x
+                                openingX = current.Partition.X2;
+                            } else
+                            {
+                                // edge is on the left side
+                                openingX = edge.Partition.X2;
+                            }
 
+                            int y1 = current.Partition.Y1 + 1;  // we remove/add 1, so it creates a little 'pillar' next to the walls
+                            int y2 = current.Partition.Y2 - 1;
+
+                            // TODO: check duplication of openings creation because there is no check if 
+                            // an opening was already created due to all rooms vs edges being checked
+                            Rooms.Openings.Add(new Opening(openingX, y1, openingX, y2, current, edge));
+
+                        } else if(verticalNeighbors)
+                        {
+                            // get the bottom edge of the top most neighbour
+                            int openingY;
+
+                            if(current.Partition.Y1 < edge.Partition.Y1)
+                            {
+                                // current is on the top side
+                                // lets add y + height to get opening y
+                                openingY = current.Partition.Y2;
+                            } else
+                            {
+                                // edge is on the top side
+                                openingY = edge.Partition.Y2;
+                            }
+
+                            int x1 = current.Partition.X1 + 1;  // we remove/add 1, so it creates a little 'pillar' next to the walls
+                            int x2 = current.Partition.X2 - 1;
+
+                            // TODO: check duplication of openings creation because there is no check if 
+                            // an opening was already created due to all rooms vs edges being checked
+                            Rooms.Openings.Add(new Opening(x1, openingY, x2, openingY, current, edge));
                         }
+
                     } else
                     {
 
@@ -674,7 +718,8 @@ namespace DungeonGenerator
                             continue;
                         }
 
-
+                        // TODO: check duplication of doors creation because there is no check if 
+                        // a door was already created due to all rooms vs edges being checked
                         d = new Door(x, y, current, edge);
 
                         Rooms.Doors.Add(d);

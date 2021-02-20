@@ -47,10 +47,14 @@ namespace DungeonGenerator
 
         public List<Door> Doors;
 
+        public List<Opening> Openings;
+
+
         public RoomManager(Dungeon d)
         {
             Dungeon = d;
             Doors = new List<Door>();
+            Openings = new List<Opening>();
         }
 
         public List<Room> GetAllRooms()
