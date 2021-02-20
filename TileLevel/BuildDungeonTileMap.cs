@@ -86,6 +86,21 @@ class BuildDungeonTileMap : TileMap
             SetCell(x, y, 1);
             
         }
+
+        List<Opening> opening = dungeon.Rooms.Openings;
+        foreach (Opening o in opening)
+        {
+
+            for(int x = o.X1; x <= o.X2; x++)
+            {
+                for(int y = o.Y1; y <= o.Y2; y++)
+                {
+                    SetCell(x, y, 1);
+                }
+            }
+                        
+        }
+
     }
 
     public void OnGeneratedDungeon(Dungeon d)
