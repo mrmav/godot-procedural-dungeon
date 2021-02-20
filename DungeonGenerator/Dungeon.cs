@@ -279,12 +279,17 @@ namespace DungeonGenerator
             return partitions.First();
         }
 
+        /// <summary>
+        /// Checks if a possible connection can be made between the boundaries, based on a percentage of edge sharing.
+        /// </summary>
         public bool CheckAmountOfEdgeSharingBetweenPartitions(Boundary r1, Boundary r2, float minEdgeSharingPercentage)
         {
 
+            // get the rooms overlaping dimensions
             int hoverlap = r1.CheckHorizontalOverlap(r2);
             int voverlap = r1.CheckVerticalOverlap(r2);
 
+            // get the smallest side dimensions
             int addedWidth = Math.Min(r1.Width, r2.Width);
             int addedHeight = Math.Min(r1.Height, r2.Height);
 
@@ -292,6 +297,20 @@ namespace DungeonGenerator
             float minVerticalEdgeSharing = addedHeight * minEdgeSharingPercentage;
 
             return hoverlap >= minHorizontalEdgeSharing || voverlap >= minVerticalEdgeSharing;
+
+        }
+
+        /// <summary>
+        /// Checks if a possible connection can be made between the boundaries, based on a dimension
+        /// </summary>
+        public bool CheckAmountOfEdgeSharingBetweenPartitions(Boundary r1, Boundary r2, int minEdgeSharingDimension)
+        {
+
+            // get the rooms overlaping dimensions
+            int hoverlap = r1.CheckHorizontalOverlap(r2);
+            int voverlap = r1.CheckVerticalOverlap(r2);
+
+            return hoverlap >= minEdgeSharingDimension || voverlap >= minEdgeSharingDimension;
 
         }
 
