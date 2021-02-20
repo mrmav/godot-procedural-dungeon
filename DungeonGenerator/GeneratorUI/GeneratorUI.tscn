@@ -243,14 +243,39 @@ margin_right = 227.0
 margin_bottom = 24.0
 min_value = 3.0
 max_value = 1.0
-step = 1.0
 value = 3.0
 allow_greater = true
 
-[node name="PathFindingAlgo" type="HBoxContainer" parent="Control/Panel/Form"]
+[node name="Openness" type="HBoxContainer" parent="Control/Panel/Form"]
 margin_top = 196.0
 margin_right = 227.0
-margin_bottom = 216.0
+margin_bottom = 220.0
+
+[node name="Label" type="Label" parent="Control/Panel/Form/Openness"]
+margin_right = 149.0
+margin_bottom = 24.0
+hint_tooltip = "The minimum edge share that the rooms need to be connected. Setting this to a value too close to 0 will give an error due to corner cases."
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Min. Edge Share Conn."
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpinBox" type="SpinBox" parent="Control/Panel/Form/Openness"]
+margin_left = 153.0
+margin_right = 227.0
+margin_bottom = 24.0
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="PathFindingAlgo" type="HBoxContainer" parent="Control/Panel/Form"]
+margin_top = 224.0
+margin_right = 227.0
+margin_bottom = 244.0
 
 [node name="Label" type="Label" parent="Control/Panel/Form/PathFindingAlgo"]
 margin_right = 93.0
@@ -274,9 +299,9 @@ items = [ "Manhattan", null, false, 1, null, "Euclidean", null, false, 2, null, 
 selected = 0
 
 [node name="MergeOption" type="HBoxContainer" parent="Control/Panel/Form"]
-margin_top = 220.0
+margin_top = 248.0
 margin_right = 227.0
-margin_bottom = 240.0
+margin_bottom = 268.0
 
 [node name="Label" type="Label" parent="Control/Panel/Form/MergeOption"]
 margin_right = 112.0
@@ -303,9 +328,9 @@ __meta__ = {
 }
 
 [node name="Seed" type="HBoxContainer" parent="Control/Panel/Form"]
-margin_top = 244.0
+margin_top = 272.0
 margin_right = 227.0
-margin_bottom = 268.0
+margin_bottom = 296.0
 
 [node name="Label" type="Label" parent="Control/Panel/Form/Seed"]
 margin_right = 39.0
