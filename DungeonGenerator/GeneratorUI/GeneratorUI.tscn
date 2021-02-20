@@ -294,8 +294,11 @@ margin_right = 227.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "NoMerge"
-items = [ "NoMerge", null, false, 0, null, "WidthHeight", null, false, 1, null ]
+items = [ "NoMerge", null, false, 0, null, "WidthHeight", null, false, 1, null, "Width", null, false, 2, null, "Height", null, false, 3, null ]
 selected = 0
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Seed" type="HBoxContainer" parent="Control/Panel/Form"]
 margin_top = 244.0

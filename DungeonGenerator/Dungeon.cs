@@ -45,7 +45,9 @@ namespace DungeonGenerator
     public enum DungeonMergeRooms
     {
         NoMerge,
-        WidthHeight
+        WidthHeight,
+        Width,
+        Height
     }
 
     enum DungeonConnectivity
@@ -660,26 +662,15 @@ namespace DungeonGenerator
                 // get neighbors
                 List<Room> neighbors = Rooms.GetEdges(r);
 
-                switch(Parameters.Merge)
+                foreach(Room n in neighbors)
                 {
-                    case DungeonMergeRooms.WidthHeight:
-                    {                        
-                        
-                        foreach(Room n in neighbors)
-                        {
-                            if(n == null)
-                                continue;
+                    if(n == null)
+                        continue;
 
-                            if(_checkPossibleMerge(r, n))
-                            {
-                                possibleMerges.Add(new Room[] {r, n});
-                            }
-
-                        }
-                        break;
+                    if(_checkPossibleMerge(r, n))
+                    {
+                        possibleMerges.Add(new Room[] {r, n});
                     }
-                    default:
-                        break;
 
                 }
 
@@ -728,20 +719,41 @@ namespace DungeonGenerator
             if(a.Type != DungeonRoomType.Base || b.Type != DungeonRoomType.Base)
                 return sucess;
 
+            // do to the nature of our dungeon structure (binary space partition tree),
+            // we can only perform the merge if the rooms are siblings in the BSP itself
+            // hopefully, this will be the majority of the times.
+            // the deviation parameter will "ensure" that only siblings share sides.
+            if(a.Partition != b.Partition.GetSibling())
+            {                                    
+                return sucess;
+            }
+
             bool horizontalNeighbors = a.Partition.Y == b.Partition.Y && a.Partition.Height == b.Partition.Height;
             bool verticalNeighbors   = a.Partition.X == b.Partition.X && a.Partition.Width == b.Partition.Width;
-            
-            if(horizontalNeighbors || verticalNeighbors)
-            {
-                // do to the nature of our dungeon structure (binary space partition tree),
-                // we can only perform the merge if the rooms are siblings in the BSP itself
-                // hopefully, this will be the majority of the times.
-                // the deviation parameter will "ensure" that only siblings share sides.
-                if(a.Partition == b.Partition.GetSibling())
-                {                    
-                    sucess = true;
+
+            switch(Parameters.Merge)
+            {                    
+                case DungeonMergeRooms.WidthHeight:
+                {
+                    sucess = horizontalNeighbors || verticalNeighbors;
+                    break;
                 }
+                case DungeonMergeRooms.Width:
+                {
+                    sucess = verticalNeighbors;
+                    break;
+                }
+                case DungeonMergeRooms.Height:
+                {
+                    sucess = horizontalNeighbors;
+                    break;
+                }
+                default:
+                    sucess = false;
+                    break;
+
             }
+
             return sucess;
         }
 
