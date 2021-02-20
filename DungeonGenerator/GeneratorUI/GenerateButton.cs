@@ -25,7 +25,7 @@ public class GenerateButton : Button
         int roomWidth  = (int)GetNode<SpinBox>("../Form/MinimumRoomWidth/SpinBox").Value;
         int roomHeight = (int)GetNode<SpinBox>("../Form/MinimumRoomHeight/SpinBox").Value;
 
-        float edgeShare = (float)GetNode<SpinBox>("../Form/MinEdgeSharing/SpinBox").Value;
+        int edgeShare = (int)GetNode<SpinBox>("../Form/MinEdgeSharing/SpinBox").Value;
 
         int algorithm = GetNode<OptionButton>("../Form/PathFindingAlgo/OptionButton").Selected;
         int merge = GetNode<OptionButton>("../Form/MergeOption/OptionButton").Selected;

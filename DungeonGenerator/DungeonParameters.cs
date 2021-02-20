@@ -10,7 +10,7 @@ namespace DungeonGenerator
         private int _roomHeight;
         private int _splits;
         private float _splitDeviation;        
-        private float _edgeSharing;
+        private int _edgeSharing;
         public DungeonHeuristic Algorithm;
         public DungeonMergeRooms Merge;
         public string Seed;
@@ -58,12 +58,8 @@ namespace DungeonGenerator
 
         /// <summary>
         /// This value defines the minimum amount of edge sharing to be considered a possible connection.
-        /// For example, a value of 0f will indicate that partitions that only share the corner will be possible.
-        /// A value of 1.0f will make that the the sharing must be greater or equal to at least on of the 
-        /// partitions dimensions (width or height).
-        /// connected.
         /// </summary>
-        public float EdgeSharing
+        public int EdgeSharing
         {
             get
             {
@@ -71,9 +67,7 @@ namespace DungeonGenerator
             }
             set
             {
-                if (value > 1.0f) _edgeSharing = 1.0f;
-                else if (value < 0.0f) _edgeSharing = 0.0f;
-                else _edgeSharing = value;
+                _edgeSharing = value;
 
             }
         }
@@ -119,7 +113,7 @@ namespace DungeonGenerator
             int roomH = 3, 
             int splits = 8, 
             float dev = 0.15f, 
-            float edgeShare = 0.4f, 
+            int edgeShare = 3, 
             DungeonHeuristic algo = DungeonHeuristic.Weight, 
             DungeonMergeRooms merge = DungeonMergeRooms.NoMerge, 
             string seed = "")
