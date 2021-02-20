@@ -119,7 +119,7 @@ namespace DungeonGenerator
             int roomH = 3, 
             int splits = 8, 
             float dev = 0.15f, 
-            float edgeShare = 0.2f, 
+            float edgeShare = 0.4f, 
             DungeonHeuristic algo = DungeonHeuristic.Weight, 
             DungeonMergeRooms merge = DungeonMergeRooms.NoMerge, 
             string seed = "")
