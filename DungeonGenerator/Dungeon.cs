@@ -610,63 +610,76 @@ namespace DungeonGenerator
                     int chance = (int)Utils.RandomBetween(Rng, 1, 100);
                     bool opening = chance < Parameters.Openness * 100;
 
-                    // get the middle of the overlaping edge
-                    int verticalOverlap = current.Partition.CheckVerticalOverlap(edge.Partition);
-                    int horizontalOverlap = current.Partition.CheckHorizontalOverlap(edge.Partition);
-
-                    int x, y;
-                    Door d;
-
-                    if(verticalOverlap > 0)
+                    if(opening)
                     {
-                        // if it is a vertical overlap
-                        // we need to know from each side it is
-
-                        if(current.Partition.X1 < edge.Partition.X1)
+                        if(_checkPossibleMerge(current, edge))
                         {
-                            // the current is on the right side
+                            // make the opening
 
-                            x = current.Partition.X2;
 
-                        } else
-                        {
-                            x = current.Partition.X1;
                         }
-
-                        y = Math.Max(current.Partition.Y1, edge.Partition.Y1) + verticalOverlap / 2;
-
-                    } else if(horizontalOverlap > 0)
-                    {
-                        // an horizontal overlap means
-                        // that we need to know whos
-                        // on top
-
-                        if(current.Partition.Y1 < edge.Partition.Y1)
-                        {
-                            // the current is on top
-
-                            y = current.Partition.Y2;
-
-                        } else
-                        {
-                            y = current.Partition.Y1;
-                        }
-
-                        x = Math.Max(current.Partition.X1, edge.Partition.X1) + horizontalOverlap / 2;
                     } else
                     {
-                        // this should not happen.
-                        // this will mean that the rooms are sharing 
-                        // only a corner vertice.
-                        // check dungeon parameters.
-                        Console.WriteLine("DUNGEON::DOORS::ERROR: a vertice case was found!");
-                        continue;
+
+                        // get the middle of the overlaping edge
+                        int verticalOverlap = current.Partition.CheckVerticalOverlap(edge.Partition);
+                        int horizontalOverlap = current.Partition.CheckHorizontalOverlap(edge.Partition);
+
+                        int x, y;
+                        Door d;
+
+                        if(verticalOverlap > 0)
+                        {
+                            // if it is a vertical overlap
+                            // we need to know from each side it is
+
+                            if(current.Partition.X1 < edge.Partition.X1)
+                            {
+                                // the current is on the right side
+
+                                x = current.Partition.X2;
+
+                            } else
+                            {
+                                x = current.Partition.X1;
+                            }
+
+                            y = Math.Max(current.Partition.Y1, edge.Partition.Y1) + verticalOverlap / 2;
+
+                        } else if(horizontalOverlap > 0)
+                        {
+                            // an horizontal overlap means
+                            // that we need to know whos
+                            // on top
+
+                            if(current.Partition.Y1 < edge.Partition.Y1)
+                            {
+                                // the current is on top
+
+                                y = current.Partition.Y2;
+
+                            } else
+                            {
+                                y = current.Partition.Y1;
+                            }
+
+                            x = Math.Max(current.Partition.X1, edge.Partition.X1) + horizontalOverlap / 2;
+                        } else
+                        {
+                            // this should not happen.
+                            // this will mean that the rooms are sharing 
+                            // only a corner vertice.
+                            // check dungeon parameters.
+                            Console.WriteLine("DUNGEON::DOORS::ERROR: a vertice case was found!");
+                            continue;
+                        }
+
+
+                        d = new Door(x, y, current, edge);
+
+                        Rooms.Doors.Add(d);
+
                     }
-
-
-                    d = new Door(x, y, current, edge);
-
-                    Rooms.Doors.Add(d);
 
                 }
 
@@ -691,13 +704,6 @@ namespace DungeonGenerator
                 foreach(Room n in neighbors)
                 {
                     if(n == null)
-                        continue;
-
-                    // do to the nature of our dungeon structure (binary space partition tree),
-                    // we can only perform the merge if the rooms are siblings in the BSP itself
-                    // hopefully, this will be the majority of the times.
-                    // the deviation parameter will "ensure" that only siblings share sides.
-                    if(r.Partition != n.Partition.GetSibling())
                         continue;
 
                     if(_checkPossibleMerge(r, n))
@@ -750,6 +756,13 @@ namespace DungeonGenerator
 
             // we skip special rooms, they have special needs
             if(a.Type != DungeonRoomType.Base || b.Type != DungeonRoomType.Base)
+                return sucess;
+
+            // do to the nature of our dungeon structure (binary space partition tree),
+            // we can only perform the merge if the rooms are siblings in the BSP itself
+            // hopefully, this will be the majority of the times.
+            // the deviation parameter will "ensure" that only siblings share sides.
+            if(a.Partition != b.Partition.GetSibling())
                 return sucess;
 
             bool horizontalNeighbors = a.Partition.Y == b.Partition.Y && a.Partition.Height == b.Partition.Height;
