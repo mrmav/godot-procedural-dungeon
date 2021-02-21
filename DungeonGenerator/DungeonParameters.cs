@@ -10,6 +10,7 @@ namespace DungeonGenerator
         private int _roomHeight;
         private int _splits;
         private float _splitDeviation;        
+        private float _openness;
         private int _edgeSharing;
         public DungeonHeuristic Algorithm;
         public DungeonMergeRooms Merge;
@@ -52,6 +53,24 @@ namespace DungeonGenerator
                 if (value > 1.0f) _splitDeviation = 1.0f;
                 else if (value < 0.0f) _splitDeviation = 0.0f;
                 else _splitDeviation = value;
+
+            }
+        }
+
+        /// <summary>
+        /// This value defines the deviation of the split by the center
+        /// </summary>
+        public float Openness
+        {
+            get
+            {
+                return _openness;
+            }
+            set
+            {
+                if (value > 1.0f) _openness = 1.0f;
+                else if (value < 0.0f) _openness = 0.0f;
+                else _openness = value;
 
             }
         }
@@ -110,12 +129,13 @@ namespace DungeonGenerator
             int w = 80, 
             int h = 80, 
             int roomW = 6, 
-            int roomH = 3, 
+            int roomH = 4, 
             int splits = 8, 
             float dev = 0.15f, 
             int edgeShare = 3, 
-            DungeonHeuristic algo = DungeonHeuristic.Weight, 
-            DungeonMergeRooms merge = DungeonMergeRooms.NoMerge, 
+            float openness = 0.65f,
+            DungeonHeuristic algo = DungeonHeuristic.Manhattan, 
+            DungeonMergeRooms merge = DungeonMergeRooms.WidthHeight, 
             string seed = "")
         {
 
@@ -126,6 +146,7 @@ namespace DungeonGenerator
             Splits = splits;
             SplitDeviation = dev;
             EdgeSharing = edgeShare;
+            Openness = openness;
             Algorithm = algo;
             Merge = merge;
             Seed = seed;
@@ -134,7 +155,7 @@ namespace DungeonGenerator
 
         public override string ToString()
         {
-            return $"DungeonWidth: {DungeonWidth}\nDungeonHeight: {DungeonHeight}\nMinRoomWidth: {MinRoomWidth}\nMinRoomHeight: {MinRoomHeight}\nSplits: {Splits}\nSplitDeviation: {SplitDeviation}\nEdgeSharing: {EdgeSharing}\nAlgorithm: {Algorithm}\nMerge: {Merge}\nSeed: {Seed}";            
+            return $"DungeonWidth: {DungeonWidth}\nDungeonHeight: {DungeonHeight}\nMinRoomWidth: {MinRoomWidth}\nMinRoomHeight: {MinRoomHeight}\nSplits: {Splits}\nSplitDeviation: {SplitDeviation}\nOpenness: {Openness}\nEdgeSharing: {EdgeSharing}\nAlgorithm: {Algorithm}\nMerge: {Merge}\nSeed: {Seed}";            
         }
 
     }

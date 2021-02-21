@@ -39,7 +39,7 @@ namespace DungeonGenerator
                 dungeon.BuildGraph();
                 dungeon.ConnectDungeonRooms();
                 dungeon.MergeRooms();
-                dungeon.GenerateDoors();                
+                dungeon.GeneratePassages();                
 
             } catch(Exception e)
             {

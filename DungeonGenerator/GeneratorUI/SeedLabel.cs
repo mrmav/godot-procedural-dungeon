@@ -34,7 +34,7 @@ class SeedLabel : Label
     public void OnGeneratedDungeon(Dungeon d)
     {
         seed = d.Parameters.Seed;
-        Text = "Seed: " + seed;
+        Text = "Seed: " + seed + (" (click to populate seed field)");
     }
 
     private void _on_SeedText_mouse_entered()
