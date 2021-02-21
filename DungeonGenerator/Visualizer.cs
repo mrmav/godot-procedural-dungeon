@@ -30,6 +30,8 @@ namespace DungeonGenerator
 
             generator.Connect("OnGeneratedDungeon", this, nameof(OnGeneratedDungeon));
 
+            Position += new Vector2(DebugScale, DebugScale) / 2f;
+
         }
 
         public override void _Draw()

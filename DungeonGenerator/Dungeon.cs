@@ -607,13 +607,13 @@ namespace DungeonGenerator
                     // should we have a parameter to define the frequency of big openings? 
                     // maybe like Parameters.Openness (0.0f to 1.0f), where if 1, only generate openings.
                                             
-                    bool openingChance = ((int)Utils.RandomBetween(Rng, 1, 100)) < (Parameters.Openness * 100);
+                    int chance = (int)Utils.RandomBetween(Rng, 1, 100);
+                    bool openingChance = chance < (Parameters.Openness * 100);
 
                     if(openingChance)
                     {
                         if(current.Type == DungeonRoomType.Base && edge.Type == DungeonRoomType.Base)
                         {
-
                             bool horizontalNeighbors = current.Partition.Y == edge.Partition.Y && current.Partition.Height == edge.Partition.Height;
                             bool verticalNeighbors   = current.Partition.X == edge.Partition.X && current.Partition.Width  == edge.Partition.Width;
 

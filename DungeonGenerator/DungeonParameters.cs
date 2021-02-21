@@ -129,13 +129,13 @@ namespace DungeonGenerator
             int w = 80, 
             int h = 80, 
             int roomW = 6, 
-            int roomH = 3, 
+            int roomH = 4, 
             int splits = 8, 
             float dev = 0.15f, 
             int edgeShare = 3, 
-            float openness = 0.5f,
-            DungeonHeuristic algo = DungeonHeuristic.Weight, 
-            DungeonMergeRooms merge = DungeonMergeRooms.NoMerge, 
+            float openness = 0.65f,
+            DungeonHeuristic algo = DungeonHeuristic.Manhattan, 
+            DungeonMergeRooms merge = DungeonMergeRooms.WidthHeight, 
             string seed = "")
         {
 

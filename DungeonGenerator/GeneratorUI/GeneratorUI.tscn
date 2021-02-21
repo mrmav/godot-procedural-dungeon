@@ -254,11 +254,11 @@ margin_bottom = 220.0
 [node name="Label" type="Label" parent="Control/Panel/Form/Openness"]
 margin_right = 149.0
 margin_bottom = 24.0
-hint_tooltip = "The minimum edge share that the rooms need to be connected. Setting this to a value too close to 0 will give an error due to corner cases."
+hint_tooltip = "Chance to create big openings when rooms are aligned with each other."
 mouse_filter = 1
 size_flags_horizontal = 3
 size_flags_vertical = 1
-text = "Min. Edge Share Conn."
+text = "Openness"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
