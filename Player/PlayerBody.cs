@@ -8,7 +8,7 @@ public class PlayerBody : KinematicBody2D
     // private string b = "text";
 
     [Export]
-    float speed = 1f;
+    float Speed = 1f;
 
     private Vector2 _velocity = Vector2.Zero;
     private AnimatedSprite _animation;
@@ -46,7 +46,7 @@ public class PlayerBody : KinematicBody2D
 
         direction = direction.Normalized();
 
-        _velocity = direction * speed;
+        _velocity = direction * Speed;
 
         _velocity = MoveAndSlide(_velocity);
 
