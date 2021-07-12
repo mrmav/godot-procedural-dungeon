@@ -66,12 +66,14 @@ public class Slime : KinematicBody2D
         {
             _animation.Play("idle");            
         }
+     }
 
+    public override void _PhysicsProcess(float delta)
+    {
         Mode = Behaviour.Wander;
         // try to find the player        
         if(_detectArea.OverlapsArea(_targetFoe.GetNode<Area2D>("DamageArea")))
         {
-
             var spaceState = GetWorld2d().DirectSpaceState;
             Dictionary result = spaceState.IntersectRay(GlobalPosition, _targetFoe.GlobalPosition, new Godot.Collections.Array { this, _targetFoe });
 
@@ -87,11 +89,6 @@ public class Slime : KinematicBody2D
 
         }
 
-     }
-
-    public override void _PhysicsProcess(float delta)
-    {
-        
         if(Mode == Behaviour.Wander)
         {    
             _velocity = Vector2.Zero;
@@ -130,7 +127,7 @@ public class Slime : KinematicBody2D
             Vector2 direction = _targetFoe.Position - Position;
             direction = direction.Normalized();
 
-            _velocity = direction * Speed;
+            _velocity = direction * (Speed * 1.2f);
             MoveAndSlide(_velocity);
         }
 
@@ -143,14 +140,14 @@ public class Slime : KinematicBody2D
         Vector2 t = Vector2.Zero;
         CollisionShape2D c = _detectArea.GetNode<CollisionShape2D>("CollisionShape2D");
         
-        int theta = _rng.RandiRange(-180, 180);
+        float theta = (3.14f * 2f) * _rng.Randf();
 
         // make the point only from outter ring of the _detectArea
         float maxRadius = ((CircleShape2D)c.Shape).Radius;
         float minRadius = maxRadius * 0.5f;
 
-        t.x = c.Position.x + (maxRadius - minRadius) * Mathf.Cos(theta) + minRadius;
-        t.y = c.Position.y + (maxRadius - minRadius) * Mathf.Sin(theta) + minRadius;
+        t.x = c.GlobalPosition.x + maxRadius * Mathf.Cos(theta);
+        t.y = c.GlobalPosition.y + maxRadius * Mathf.Sin(theta);
 
         return t;
     }

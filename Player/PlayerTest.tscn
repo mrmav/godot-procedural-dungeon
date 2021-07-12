@@ -25,4 +25,4 @@ __meta__ = {
 position = Vector2( 259, 96 )
 
 [node name="Slime4" parent="YSort" instance=ExtResource( 3 )]
-position = Vector2( 48, 42 )
+position = Vector2( 88, 130 )
