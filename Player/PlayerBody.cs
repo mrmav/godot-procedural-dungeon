@@ -12,10 +12,12 @@ public class PlayerBody : KinematicBody2D
 
     private Vector2 _velocity = Vector2.Zero;
     private AnimatedSprite _animation;
+    private Position2D _weaponHandle;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        _weaponHandle = GetNode<Position2D>("WeaponHandle");
         _animation = GetNode<AnimatedSprite>("AnimatedSprite");
     }
 
@@ -24,13 +26,31 @@ public class PlayerBody : KinematicBody2D
     {
         if(_velocity.Length() != 0)
         {
-            _animation.Play("walk");
-            _animation.FlipH = _velocity.x < 0;
+            _animation.Play("walk");            
+            
         } else
         {
             _animation.Play("idle");            
-        }        
+        }
+
+        Vector2 mouse = GetGlobalMousePosition();
+        _weaponHandle.LookAt(mouse);
         
+        if(mouse.x < Position.x)
+        {
+            _weaponHandle.Scale = new Vector2(1, -1);
+            _animation.FlipH = true;
+        } else
+        {
+            _weaponHandle.Scale = new Vector2(1, 1);
+            _animation.FlipH = false;
+        }
+        
+        if(Input.IsActionJustPressed("player_attack"))
+        {
+            _weaponHandle.GetNode<AnimationPlayer>("WeaponRoot/AnimationPlayer").Play("swing");
+        }
+
     }
 
     public override void _PhysicsProcess(float delta)
