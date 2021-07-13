@@ -32,6 +32,10 @@ window/stretch/aspect="keep"
 
 enabled=PoolStringArray( "MonoDebuggerQM-1.0.2" )
 
+[global]
+
+comp=false
+
 [importer_defaults]
 
 texture={

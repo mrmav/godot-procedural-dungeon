@@ -14,9 +14,6 @@
     <Deterministic>false</Deterministic>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Foes\Slime\Slime.cs" />
-    <Compile Include="HealthComponent\HealthComponent.cs" />
-    <Compile Include="InvulnerabilityComponent\InvulnerabilityComponent.cs" />
-    <Compile Include="Player\PlayerBody.cs" />
+    <Compile Include="**\*.cs" />
   </ItemGroup>
 </Project>
