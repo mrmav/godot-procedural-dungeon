@@ -100,6 +100,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 0, 0 ), Vector2( 0, -1 ), Vector2( 1.37673, 1.37673 ), Vector2( 2, 2 ), Vector2( 0, 0 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("DamageComponent/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.15, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, false, true ]
+}
 
 [sub_resource type="CapsuleShape2D" id=17]
 radius = 4.0
@@ -115,6 +127,7 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
+frame = 1
 playing = true
 offset = Vector2( 0, -10 )
 
@@ -130,23 +143,26 @@ smoothing_enabled = true
 
 [node name="WeaponHandle" type="Position2D" parent="."]
 
-[node name="WeaponRoot" type="Node2D" parent="WeaponHandle"]
+[node name="Sword" type="Node2D" parent="WeaponHandle"]
 position = Vector2( 5, 1 )
 
-[node name="Sprite" type="Sprite" parent="WeaponHandle/WeaponRoot"]
+[node name="Sprite" type="Sprite" parent="WeaponHandle/Sword"]
 rotation = -1.309
 scale = Vector2( 0.533778, 0.533778 )
 texture = ExtResource( 4 )
 offset = Vector2( 7.49375, 0 )
 
-[node name="DamageArea" type="Area2D" parent="WeaponHandle/WeaponRoot"]
-visible = false
+[node name="DamageComponent" parent="WeaponHandle/Sword" instance=ExtResource( 7 )]
 position = Vector2( 1, 1 )
+Group = "weapon"
+GroupsToDamage = PoolStringArray( "slime" )
+AmountOfDamage = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHandle/WeaponRoot/DamageArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHandle/Sword/DamageComponent"]
 shape = SubResource( 15 )
+disabled = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="WeaponHandle/WeaponRoot"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WeaponHandle/Sword"]
 anims/swing = SubResource( 16 )
 
 [node name="HealthComponent" parent="." instance=ExtResource( 5 )]

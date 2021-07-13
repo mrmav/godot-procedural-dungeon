@@ -16,6 +16,8 @@ public class PlayerBody : KinematicBody2D
     private HealthComponent _health;
     private InvulnerabilityComponent _invulnerability;
     private DamageComponent _damage;
+    private DamageComponent _swordDamage;
+    
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -25,10 +27,12 @@ public class PlayerBody : KinematicBody2D
         _health = GetNode<HealthComponent>("HealthComponent");
         _invulnerability = GetNode<InvulnerabilityComponent>("Invulnerability");
         _damage = GetNode<DamageComponent>("DamageComponent");
+        _swordDamage = GetNode<DamageComponent>("WeaponHandle/Sword/DamageComponent");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
         _damage.Connect("OnDamageTaken", this, nameof(OnDamageTaken));
+        _swordDamage.Connect("OnDamageTaken", this, nameof(OnSwordDamage));
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -36,7 +40,7 @@ public class PlayerBody : KinematicBody2D
     {
         if(_velocity.Length() != 0)
         {
-            _animation.Play("walk");            
+            _animation.Play("walk");
             
         } else
         {
@@ -58,9 +62,10 @@ public class PlayerBody : KinematicBody2D
         
         if(Input.IsActionJustPressed("player_attack"))
         {
-            AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("WeaponRoot/AnimationPlayer");
+            AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("Sword/AnimationPlayer");
             anim.Stop();
-            anim.Play("swing");            
+            anim.Play("swing");
+
         }
 
         if(!_invulnerability.IsVulnerable)
@@ -120,6 +125,13 @@ public class PlayerBody : KinematicBody2D
             _invulnerability.SetInvulnerable();
             GD.Print($"{who} dealt {amount} of damage to Player.");
         }
+        
+    }
+
+    public void OnSwordDamage(int amount, string who)
+    {
+        
+        GD.Print($"I think the sword dealt {amount} to {who}");
         
     }
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Art/slime.png" type="Texture" id=1]
 [ext_resource path="res://Foes/Slime/Slime.cs" type="Script" id=2]
 [ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Components/InvulnerabilityComponent/InvulnerabilityComponent.tscn" type="PackedScene" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -79,3 +80,5 @@ AmountOfDamage = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 6 )
+
+[node name="Invulnerability" parent="." instance=ExtResource( 4 )]
