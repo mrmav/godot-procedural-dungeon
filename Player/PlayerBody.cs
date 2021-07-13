@@ -13,12 +13,19 @@ public class PlayerBody : KinematicBody2D
     private Vector2 _velocity = Vector2.Zero;
     private AnimatedSprite _animation;
     private Position2D _weaponHandle;
+    private HealthComponent _health;
+    private InvulnerabilityComponent _invulnerability;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         _weaponHandle = GetNode<Position2D>("WeaponHandle");
         _animation = GetNode<AnimatedSprite>("AnimatedSprite");
+        _health = GetNode<HealthComponent>("HealthComponent");
+        _invulnerability = GetNode<InvulnerabilityComponent>("Invulnerability");
+
+        _health.Connect("Died", this, nameof(OnPlayerDead));
+        _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -51,6 +58,13 @@ public class PlayerBody : KinematicBody2D
             AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("WeaponRoot/AnimationPlayer");
             anim.Stop();
             anim.Play("swing");
+            
+            // test components
+            _health.Damage(5);
+            _invulnerability.SetInvulnerable();
+            _animation.Modulate = Colors.Red;
+
+
         }
 
     }
@@ -73,6 +87,18 @@ public class PlayerBody : KinematicBody2D
         _velocity = MoveAndSlide(_velocity);
 
         base._PhysicsProcess(delta);
+
+    }
+
+    public void OnPlayerDead(int health)
+    {
+        GD.Print($"player died with {health} health.");
+    }
+
+    public void OnInvulnerabilityLifted()
+    {
+        _animation.Modulate = Colors.White;
+        GD.Print($"player is now vulnerable.");
     }
 
 
