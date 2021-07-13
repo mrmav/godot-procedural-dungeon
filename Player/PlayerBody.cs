@@ -48,7 +48,9 @@ public class PlayerBody : KinematicBody2D
         
         if(Input.IsActionJustPressed("player_attack"))
         {
-            _weaponHandle.GetNode<AnimationPlayer>("WeaponRoot/AnimationPlayer").Play("swing");
+            AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("WeaponRoot/AnimationPlayer");
+            anim.Stop();
+            anim.Play("swing");
         }
 
     }
