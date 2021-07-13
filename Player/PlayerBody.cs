@@ -15,6 +15,7 @@ public class PlayerBody : KinematicBody2D
     private Position2D _weaponHandle;
     private HealthComponent _health;
     private InvulnerabilityComponent _invulnerability;
+    private DamageComponent _damage;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -23,9 +24,11 @@ public class PlayerBody : KinematicBody2D
         _animation = GetNode<AnimatedSprite>("AnimatedSprite");
         _health = GetNode<HealthComponent>("HealthComponent");
         _invulnerability = GetNode<InvulnerabilityComponent>("Invulnerability");
+        _damage = GetNode<DamageComponent>("DamageComponent");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
+        _damage.Connect("OnDamageTaken", this, nameof(OnDamageTaken));
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -57,14 +60,22 @@ public class PlayerBody : KinematicBody2D
         {
             AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("WeaponRoot/AnimationPlayer");
             anim.Stop();
-            anim.Play("swing");
-            
-            // test components
-            _health.Damage(5);
-            _invulnerability.SetInvulnerable();
-            _animation.Modulate = Colors.Red;
+            anim.Play("swing");            
+        }
 
-
+        if(!_invulnerability.IsVulnerable)
+        {
+            uint time = OS.GetTicksMsec();
+            if(time % 100 < 50)
+            {
+                Modulate = Colors.Red;
+            } else
+            {
+                Modulate = Colors.White;
+            }
+        } else
+        {
+            Modulate = Colors.White;
         }
 
     }
@@ -92,13 +103,24 @@ public class PlayerBody : KinematicBody2D
 
     public void OnPlayerDead(int health)
     {
-        GD.Print($"player died with {health} health.");
+        GD.Print($"Player should have died with {health} health.");
     }
 
     public void OnInvulnerabilityLifted()
     {
         _animation.Modulate = Colors.White;
-        GD.Print($"player is now vulnerable.");
+        //GD.Print($"player is now vulnerable.");
+    }
+    
+    public void OnDamageTaken(int amount, string who)
+    {
+        if(_invulnerability.IsVulnerable)
+        {
+            _health.Damage(amount);
+            _invulnerability.SetInvulnerable();
+            GD.Print($"{who} dealt {amount} of damage to Player.");
+        }
+        
     }
 
 

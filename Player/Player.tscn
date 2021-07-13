@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Art/ronWalk.png" type="Texture" id=1]
 [ext_resource path="res://Art/ronIdle.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Art/sword.png" type="Texture" id=4]
 [ext_resource path="res://Components/HealthComponent/HealthComponent.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Components/InvulnerabilityComponent/InvulnerabilityComponent.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=7]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -68,10 +69,6 @@ animations = [ {
 radius = 5.0
 height = 6.0
 
-[sub_resource type="CapsuleShape2D" id=14]
-radius = 4.0
-height = 8.0
-
 [sub_resource type="CircleShape2D" id=15]
 radius = 14.0357
 
@@ -104,8 +101,13 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 0, -1 ), Vector2( 1.37673, 1.37673 ), Vector2( 2, 2 ), Vector2( 0, 0 ) ]
 }
 
+[sub_resource type="CapsuleShape2D" id=17]
+radius = 4.0
+height = 8.0
+
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 0, -10 )
+collision_layer = 2
 script = ExtResource( 3 )
 Speed = 100.0
 
@@ -113,22 +115,13 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
-frame = 2
 playing = true
 offset = Vector2( 0, -10 )
 
 [node name="BodyCollisionShape" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( 0, 5 )
 rotation = 1.5708
 shape = SubResource( 13 )
-
-[node name="DamageArea" type="Area2D" parent="."]
-visible = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
-position = Vector2( 0, 2 )
-shape = SubResource( 14 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
@@ -159,3 +152,13 @@ anims/swing = SubResource( 16 )
 [node name="HealthComponent" parent="." instance=ExtResource( 5 )]
 
 [node name="Invulnerability" parent="." instance=ExtResource( 6 )]
+Duration = 3.0
+
+[node name="DamageComponent" parent="." instance=ExtResource( 7 )]
+Group = "hero"
+GroupsToDamage = PoolStringArray( "slime" )
+AmountOfDamage = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
+position = Vector2( 0, 2 )
+shape = SubResource( 17 )
