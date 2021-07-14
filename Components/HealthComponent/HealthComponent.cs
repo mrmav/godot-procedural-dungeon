@@ -18,7 +18,7 @@ public class HealthComponent : Node
     {
         Health -= amount;
         
-        if(Health < 0)
+        if(Health <= 0)
         {
             // send death signal
             EmitSignal(nameof(Died), Health);

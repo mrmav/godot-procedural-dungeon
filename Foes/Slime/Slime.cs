@@ -40,7 +40,7 @@ public class Slime : KinematicBody2D
     public override void _Ready()
     {
         _animation = GetNode<AnimatedSprite>("AnimatedSprite");
-        _damageArea = GetNode<Area2D>("DamageArea");
+        _damageArea = GetNode<Area2D>("DamageComponent");
         _detectArea = GetNode<Area2D>("DetectArea");
         _newTargetTimer = GetNode<Timer>("NewTargetTimer");
         _walkDurationTimer = GetNode<Timer>("WalkingDurationTimer");
@@ -72,7 +72,7 @@ public class Slime : KinematicBody2D
     {
         Mode = Behaviour.Wander;
         // try to find the player        
-        if(_detectArea.OverlapsArea(_targetFoe.GetNode<Area2D>("DamageArea")))
+        if(_detectArea.OverlapsArea(_targetFoe.GetNode<Area2D>("DamageComponent")))
         {
             var spaceState = GetWorld2d().DirectSpaceState;
             Dictionary result = spaceState.IntersectRay(GlobalPosition, _targetFoe.GlobalPosition, new Godot.Collections.Array { this, _targetFoe });
@@ -155,7 +155,6 @@ public class Slime : KinematicBody2D
     private void SetRandomTarget()
     {
         _target = GetRandomPos();
-        GD.Print(_target);
         _walkDurationTimer.Start();
     }
 

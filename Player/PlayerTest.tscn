@@ -21,9 +21,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Player" parent="YSort" instance=ExtResource( 2 )]
-position = Vector2( 259, 96 )
-
 [node name="Slime4" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 80, 163 )
 
@@ -38,3 +35,6 @@ position = Vector2( 337, 85 )
 
 [node name="Slime8" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 409, 253 )
+
+[node name="Player" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( 304, 191 )

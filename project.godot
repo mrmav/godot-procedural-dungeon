@@ -35,6 +35,8 @@ enabled=PoolStringArray( "MonoDebuggerQM-1.0.2" )
 [global]
 
 comp=false
+layer=false
+layers=false
 
 [importer_defaults]
 
@@ -111,6 +113,12 @@ player_attack={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":1,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
+
+[layer_names]
+
+2d_physics/layer_1="Tilemap"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Foes"
 
 [logging]
 
