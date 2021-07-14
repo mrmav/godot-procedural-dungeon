@@ -13,7 +13,10 @@ public class DamageComponent : Area2D
     public string Group = "default";
     [Export]
     public string[] GroupsToDamage;
-    
+    [Export]
+    public bool OneShot = false;
+    [Export]
+    public bool DoDamage = true;    
 
     private List<DamageComponent> _areasToDamage;
     
@@ -51,12 +54,18 @@ public class DamageComponent : Area2D
 
         }
 
-        for(int i = 0; i < _areasToDamage.Count; i++)
+        if(DoDamage)
         {
-            if(OverlapsArea(_areasToDamage[i]))
+            for(int i = 0; i < _areasToDamage.Count; i++)
             {
-                EmitSignal(nameof(OnDamageTaken), _areasToDamage[i].AmountOfDamage, _areasToDamage[i].GetParent().Name);
+                if(OverlapsArea(_areasToDamage[i]))
+                {
+                    EmitSignal(nameof(OnDamageTaken), _areasToDamage[i].AmountOfDamage, _areasToDamage[i].GetParent().Name);
+                }
+
             }
+
+            DoDamage = !OneShot;
 
         }
 

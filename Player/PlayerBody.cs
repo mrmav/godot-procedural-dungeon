@@ -64,7 +64,8 @@ public class PlayerBody : KinematicBody2D
         {
             AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("Sword/AnimationPlayer");
             anim.Stop();
-            anim.Play("swing");
+            anim.Play("swing", -1, 1.5f);
+            _swordDamage.DoDamage = true;
 
         }
 
