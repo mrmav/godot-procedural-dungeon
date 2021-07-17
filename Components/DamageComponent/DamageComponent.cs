@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class DamageComponent : Area2D
 {
     [Signal]
-    public delegate void OnDamageTaken(int amount, string who);
+    public delegate void DamageTaken(int amount, string who);
 
     [Export]
     public int AmountOfDamage = 1;
@@ -58,9 +58,12 @@ public class DamageComponent : Area2D
         {
             for(int i = 0; i < _areasToDamage.Count; i++)
             {
-                if(OverlapsArea(_areasToDamage[i]))
+                DamageComponent other = _areasToDamage[i];
+
+                if(OverlapsArea(other))
                 {
-                    EmitSignal(nameof(OnDamageTaken), _areasToDamage[i].AmountOfDamage, _areasToDamage[i].GetParent().Name);
+                    other.EmitSignal("DamageTaken", AmountOfDamage, GetParent().Name);
+                    //EmitSignal(nameof(DamageTaken), _areasToDamage[i].AmountOfDamage, _areasToDamage[i].GetParent().Name);
                 }
 
             }

@@ -16,7 +16,7 @@ public class PlayerBody : KinematicBody2D
     private HealthComponent _health;
     private InvulnerabilityComponent _invulnerability;
     private DamageComponent _damage;
-    private DamageComponent _swordDamage;
+    private MeleeWeapon _melee;
     
 
     // Called when the node enters the scene tree for the first time.
@@ -27,12 +27,11 @@ public class PlayerBody : KinematicBody2D
         _health = GetNode<HealthComponent>("HealthComponent");
         _invulnerability = GetNode<InvulnerabilityComponent>("Invulnerability");
         _damage = GetNode<DamageComponent>("DamageComponent");
-        _swordDamage = GetNode<DamageComponent>("WeaponHandle/Sword/DamageComponent");
+        _melee = GetNode("WeaponHandle").GetChild<MeleeWeapon>(0);
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
-        _damage.Connect("OnDamageTaken", this, nameof(OnDamageTaken));
-        _swordDamage.Connect("OnDamageTaken", this, nameof(OnSwordDamage));
+        _damage.Connect("DamageTaken", this, nameof(OnDamageTaken));
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -62,11 +61,7 @@ public class PlayerBody : KinematicBody2D
         
         if(Input.IsActionJustPressed("player_attack"))
         {
-            AnimationPlayer anim = _weaponHandle.GetNode<AnimationPlayer>("Sword/AnimationPlayer");
-            anim.Stop();
-            anim.Play("swing", -1, 1.5f);
-            _swordDamage.DoDamage = true;
-
+            _melee.Attack();
         }
 
         if(!_invulnerability.IsVulnerable)
@@ -124,17 +119,9 @@ public class PlayerBody : KinematicBody2D
         {
             _health.Damage(amount);
             _invulnerability.SetInvulnerable();
-            GD.Print($"{who} dealt {amount} of damage to Player.");
+            GD.Print($"{who} dealt {amount} of damage to {Name}.");
         }
         
     }
-
-    public void OnSwordDamage(int amount, string who)
-    {
-        
-        GD.Print($"I think the sword dealt {amount} to {who}");
-        
-    }
-
 
 }

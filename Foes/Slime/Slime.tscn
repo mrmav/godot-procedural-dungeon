@@ -39,10 +39,10 @@ animations = [ {
 radius = 5.0
 height = 4.0
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=6]
 radius = 60.075
 
-[sub_resource type="CircleShape2D" id=6]
+[sub_resource type="CircleShape2D" id=7]
 radius = 8.0
 
 [node name="Slime" type="KinematicBody2D"]
@@ -65,7 +65,7 @@ shape = SubResource( 5 )
 [node name="DetectArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectArea"]
-shape = SubResource( 7 )
+shape = SubResource( 6 )
 
 [node name="NewTargetTimer" type="Timer" parent="."]
 wait_time = 2.0
@@ -75,10 +75,10 @@ one_shot = true
 
 [node name="DamageComponent" parent="." instance=ExtResource( 3 )]
 Group = "slime"
-GroupsToDamage = PoolStringArray( "hero" )
 AmountOfDamage = 2
+GroupsToDamage = PoolStringArray( "hero" )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
-shape = SubResource( 6 )
+shape = SubResource( 7 )
 
 [node name="Invulnerability" parent="." instance=ExtResource( 4 )]

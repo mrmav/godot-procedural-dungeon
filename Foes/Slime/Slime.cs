@@ -16,7 +16,7 @@ public class Slime : KinematicBody2D
     [Export]
     public float Speed = 20f;
     [Export]
-    public int Damage = 1;    
+    public int Damage = 1;
     [Export]
     public Behaviour Mode = Behaviour.Wander;
     [Export]
@@ -27,6 +27,7 @@ public class Slime : KinematicBody2D
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _target = Vector2.Zero;    
     private KinematicBody2D _targetFoe = null;
+    private DamageComponent _damage;
         
     private AnimatedSprite _animation;
     private Area2D _damageArea;
@@ -45,6 +46,8 @@ public class Slime : KinematicBody2D
         _newTargetTimer = GetNode<Timer>("NewTargetTimer");
         _walkDurationTimer = GetNode<Timer>("WalkingDurationTimer");
         _targetFoe = GetParent().GetNode<KinematicBody2D>("Player");
+        _damage = GetNode<DamageComponent>("DamageComponent");
+        _damage.Connect("DamageTaken", this, nameof(OnDamageTaken));
 
         _newTargetTimer.Connect("timeout", this, nameof(SetRandomTarget));
         _walkDurationTimer.Connect("timeout", this, nameof(SetRefreshTimer));
@@ -162,6 +165,11 @@ public class Slime : KinematicBody2D
     {
         _refreshTargetTimer = true;
         _walkDurationTimer.Stop();
+    }
+
+    private void OnDamageTaken(int amount, string who)
+    {
+        GD.Print($"{who} dealt {amount} damage to {Name}");
     }
 
 }
