@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Fonts/font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Components/TextPopupComponent/LabelCenter.cs" type="Script" id=2]
+[ext_resource path="res://Components/TextPopupComponent/TextPopup.cs" type="Script" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "fade-up"
+length = 0.7
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Node2D:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.313638, -11.4569, -10.0585, -0.289457, -2.85884, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.7 )
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Node2D/Label:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="HealthPopup" type="Node2D"]
+z_index = 5
+script = ExtResource( 3 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 0, -10.0585 )
+
+[node name="Label" type="Label" parent="Node2D"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -28.0
+margin_top = -7.5
+margin_right = 28.0
+margin_bottom = 7.5
+custom_fonts/font = ExtResource( 1 )
+text = "xyz"
+align = 1
+valign = 1
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/fade-up = SubResource( 1 )

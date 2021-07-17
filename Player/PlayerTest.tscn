@@ -38,3 +38,5 @@ position = Vector2( 409, 253 )
 
 [node name="Player" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 304, 191 )
+
+[node name="NotificationContainer" type="Node" parent="."]
