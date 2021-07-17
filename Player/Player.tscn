@@ -1,9 +1,9 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Art/ronWalk.png" type="Texture" id=1]
 [ext_resource path="res://Art/ronIdle.png" type="Texture" id=2]
-[ext_resource path="res://Player/PlayerBody.cs" type="Script" id=3]
-[ext_resource path="res://Art/sword.png" type="Texture" id=4]
+[ext_resource path="res://Player/Player.cs" type="Script" id=3]
+[ext_resource path="res://Weapons/MeleeWeapon.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Components/HealthComponent/HealthComponent.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Components/InvulnerabilityComponent/InvulnerabilityComponent.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=7]
@@ -69,39 +69,7 @@ animations = [ {
 radius = 5.0
 height = 6.0
 
-[sub_resource type="CircleShape2D" id=14]
-radius = 14.0357
-
-[sub_resource type="Animation" id=15]
-resource_name = "swing"
-length = 0.2
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.05, 0.15, 0.2 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"update": 0,
-"values": [ -74.9999, -81.7073, 59.9999, -75.0 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, -1 ), Vector2( 1.37673, 1.37673 ), Vector2( 2, 2 ), Vector2( 0, 0 ) ]
-}
-
-[sub_resource type="CapsuleShape2D" id=16]
+[sub_resource type="CapsuleShape2D" id=14]
 radius = 4.0
 height = 8.0
 
@@ -115,7 +83,7 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
-frame = 2
+frame = 1
 playing = true
 offset = Vector2( 0, -10 )
 
@@ -131,28 +99,8 @@ smoothing_enabled = true
 
 [node name="WeaponHandle" type="Position2D" parent="."]
 
-[node name="Sword" type="Node2D" parent="WeaponHandle"]
+[node name="SimpleSword" parent="WeaponHandle" instance=ExtResource( 4 )]
 position = Vector2( 5, 1 )
-
-[node name="Sprite" type="Sprite" parent="WeaponHandle/Sword"]
-rotation = -1.309
-scale = Vector2( 0.533778, 0.533778 )
-texture = ExtResource( 4 )
-offset = Vector2( 7.49375, 0 )
-
-[node name="DamageComponent" parent="WeaponHandle/Sword" instance=ExtResource( 7 )]
-position = Vector2( 1, 1 )
-Group = "weapon"
-AmountOfDamage = 4
-GroupsToDamage = PoolStringArray( "slime" )
-OneShot = true
-DoDamage = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WeaponHandle/Sword/DamageComponent"]
-shape = SubResource( 14 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="WeaponHandle/Sword"]
-anims/swing = SubResource( 15 )
 
 [node name="HealthComponent" parent="." instance=ExtResource( 5 )]
 
@@ -162,8 +110,7 @@ Duration = 3.0
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 Group = "hero"
 AmountOfDamage = 0
-GroupsToDamage = PoolStringArray( "slime" )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 position = Vector2( 0, 2 )
-shape = SubResource( 16 )
+shape = SubResource( 14 )
