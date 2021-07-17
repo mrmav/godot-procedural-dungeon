@@ -7,12 +7,18 @@ public class HealthComponent : Node
     public delegate void Died(int health);
     
     [Export]
-    private int Health = 10;
+    public int Health = 10;
 
-    public int GetHealth()
+    private PackedScene _notification;
+
+    public override void _Ready()
     {
-        return Health;
-    }    
+        
+        _notification = GD.Load<PackedScene>("res://Components/TextPopupComponent/TextPopup.tscn");
+        
+        base._Ready();
+
+    }
 
     public int Damage(int amount)
     {
@@ -24,6 +30,13 @@ public class HealthComponent : Node
             EmitSignal(nameof(Died), Health);
 
         }
+
+        TextPopup n = (TextPopup)_notification.Instance();
+        n.TextColor = Colors.Red;
+        n.Text = string.Concat("-", amount);
+        n.Position = ((Node2D)GetParent()).Position;
+                
+        GetTree().Root.GetNode("World/NotificationContainer").AddChild(n);
 
         return Health;
 

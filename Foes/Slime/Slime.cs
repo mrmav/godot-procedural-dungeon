@@ -14,6 +14,8 @@ public class Slime : KinematicBody2D
     }
 
     [Export]
+    public int Health = 10;
+    [Export]
     public float Speed = 20f;
     [Export]
     public int Damage = 1;
@@ -28,6 +30,7 @@ public class Slime : KinematicBody2D
     private Vector2 _target = Vector2.Zero;    
     private KinematicBody2D _targetFoe = null;
     private DamageComponent _damage;
+    private HealthComponent _health;
         
     private AnimatedSprite _animation;
     private Area2D _damageArea;
@@ -47,7 +50,12 @@ public class Slime : KinematicBody2D
         _walkDurationTimer = GetNode<Timer>("WalkingDurationTimer");
         _targetFoe = GetParent().GetNode<KinematicBody2D>("Player");
         _damage = GetNode<DamageComponent>("DamageComponent");
+        _health = GetNode<HealthComponent>("HealthComponent");
+
+        _health.Health = Health;
+
         _damage.Connect("DamageTaken", this, nameof(OnDamageTaken));
+        _health.Connect("Died", this, nameof(OnDeath));
 
         _newTargetTimer.Connect("timeout", this, nameof(SetRandomTarget));
         _walkDurationTimer.Connect("timeout", this, nameof(SetRefreshTimer));
@@ -169,7 +177,14 @@ public class Slime : KinematicBody2D
 
     private void OnDamageTaken(int amount, string who)
     {
+        _health.Damage(amount);
         GD.Print($"{who} dealt {amount} damage to {Name}");
+    }
+
+    private void OnDeath(int health)
+    {
+        GD.Print($"{Name} should have died already.");
+        QueueFree();
     }
 
 }

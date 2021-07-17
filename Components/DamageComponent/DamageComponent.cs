@@ -22,7 +22,6 @@ public class DamageComponent : Area2D
     
     private bool _firstRun = true;
 
-
     public override void _Ready()
     {
         AddToGroup(Group);
@@ -59,6 +58,15 @@ public class DamageComponent : Area2D
             for(int i = 0; i < _areasToDamage.Count; i++)
             {
                 DamageComponent other = _areasToDamage[i];
+
+                if(!IsInstanceValid(other))
+                {
+                    // this area is no longer available
+                    // (a foe died, a trap was destroyed, etc)
+                    _areasToDamage.Remove(other);
+                    continue;
+
+                }
 
                 if(OverlapsArea(other))
                 {
