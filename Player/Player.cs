@@ -161,13 +161,12 @@ public class Player : KinematicBody2D
         //GD.Print($"player is now vulnerable.");
     }
     
-    public void OnDamageTaken(int amount, string who)
+    public void OnDamageTaken(Damage damageInfo)
     {
         if(_invulnerability.IsVulnerable)
         {
-            _health.Damage(amount);
+            _health.Damage(damageInfo.Amount);
             _invulnerability.SetInvulnerable();
-            GD.Print($"{who} dealt {amount} of damage to {Name}.");
         }
         
     }

@@ -5,7 +5,10 @@ using System.Collections.Generic;
 public class DamageComponent : Area2D
 {
     [Signal]
-    public delegate void DamageTaken(int amount, string who);
+    public delegate void DamageTaken(Damage damage);
+
+    [Signal]
+    public delegate void DamageDealt(Damage damage);
 
     [Export]
     public int AmountOfDamage = 1;
@@ -16,7 +19,9 @@ public class DamageComponent : Area2D
     [Export]
     public bool OneShot = false;
     [Export]
-    public bool DoDamage = true;    
+    public bool DoDamage = true;
+    [Export]
+    public int Knockback = 100;
 
     private List<DamageComponent> _areasToDamage;
     
@@ -70,8 +75,21 @@ public class DamageComponent : Area2D
 
                 if(OverlapsArea(other))
                 {
-                    other.EmitSignal("DamageTaken", AmountOfDamage, GetParent().Name);
-                    //EmitSignal(nameof(DamageTaken), _areasToDamage[i].AmountOfDamage, _areasToDamage[i].GetParent().Name);
+                    Vector2 damageNormal = other.GetParent<Node2D>().GlobalPosition - GetParent<Node2D>().GlobalPosition;
+
+                    Damage damageInfo = new Damage
+                    (
+                        AmountOfDamage,
+                        Knockback,
+                        GetParent<Node>(),
+                        other.GetParent<Node>(),
+                        damageNormal.x,
+                        damageNormal.y
+                        
+                    );
+
+                    EmitSignal(nameof(DamageDealt), damageInfo);
+                    other.EmitSignal(nameof(DamageTaken), damageInfo);
                 }
 
             }

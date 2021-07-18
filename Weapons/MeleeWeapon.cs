@@ -10,13 +10,16 @@ public class MeleeWeapon : Node2D
     [Export]
     public int Damage = 1;
 
+    [Export]
+    public int KnockbackPower = 200;
+
     private DamageComponent _damage;
 
     public override void _Ready()
     {
         _damage = GetNode<DamageComponent>("DamageComponent");
         _damage.AmountOfDamage = Damage;
-        // _damage.Connect("DamageTaken", this, nameof(OnDamageDealt));
+        _damage.Knockback = KnockbackPower;
 
         base._Ready();
 

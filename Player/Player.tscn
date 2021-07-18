@@ -95,6 +95,7 @@ shape = SubResource( 13 )
 
 [node name="SimpleSword" parent="WeaponHandle" instance=ExtResource( 4 )]
 position = Vector2( 5, 1 )
+Damage = 2
 
 [node name="HealthComponent" parent="." instance=ExtResource( 5 )]
 
