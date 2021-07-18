@@ -38,5 +38,12 @@ position = Vector2( 409, 253 )
 
 [node name="Player" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 304, 191 )
+ControllerDeadzone = 0.4
 
 [node name="NotificationContainer" type="Node" parent="."]
+
+[node name="CameraFocusPoint" type="Position2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="CameraFocusPoint"]
+current = true
+smoothing_enabled = true

@@ -3,12 +3,18 @@ using System;
 
 public class Player : KinematicBody2D
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
+    public enum ControlType
+    {
+        Keyboard,
+        Controller
+    }
 
     [Export]
     float Speed = 1f;
+    [Export]
+    float ControllerDeadzone = 0.2f;
+    [Export]
+    float CameraExtendZone = 4f;
 
     private Vector2 _velocity = Vector2.Zero;
     private AnimatedSprite _animation;
@@ -17,8 +23,12 @@ public class Player : KinematicBody2D
     private InvulnerabilityComponent _invulnerability;
     private DamageComponent _damage;
     private MeleeWeapon _melee;
-    
 
+    public ControlType Control = ControlType.Keyboard;
+    private Vector2 _lastRightAxis = Vector2.Zero;
+
+    public Vector2 CameraFocusPoint = Vector2.Zero;
+    
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -46,10 +56,34 @@ public class Player : KinematicBody2D
             _animation.Play("idle");            
         }
 
-        Vector2 mouse = GetGlobalMousePosition();
-        _weaponHandle.LookAt(mouse);
-        
-        if(mouse.x < Position.x)
+        // make weapon and player rotate around a focus point
+        Vector2 focusPoint = Vector2.Zero;
+
+        if(Control == ControlType.Keyboard)
+        {
+            focusPoint = GetGlobalMousePosition();
+            CameraFocusPoint = GlobalPosition - focusPoint;
+            CameraFocusPoint = CameraFocusPoint.Normalized() * CameraExtendZone;
+            
+        } else if(Control == ControlType.Controller)
+        {
+            Vector2 lookDir = new Vector2(Input.GetJoyAxis(0, (int)JoystickList.AnalogRx), Input.GetJoyAxis(0, (int)JoystickList.AnalogRy));
+            
+            if(lookDir.Length() >= ControllerDeadzone)
+            {                
+                lookDir = lookDir.Normalized();
+                lookDir *= CameraExtendZone;
+                _lastRightAxis = lookDir;
+            }
+            
+            focusPoint = GlobalPosition + _lastRightAxis;
+            CameraFocusPoint = focusPoint;
+
+        }
+
+        _weaponHandle.LookAt(focusPoint);
+            
+        if(focusPoint.x < Position.x)
         {
             _weaponHandle.Scale = new Vector2(1, -1);
             _animation.FlipH = true;
@@ -58,7 +92,7 @@ public class Player : KinematicBody2D
             _weaponHandle.Scale = new Vector2(1, 1);
             _animation.FlipH = false;
         }
-        
+
         if(Input.IsActionJustPressed("player_attack"))
         {
             _melee.Attack();
@@ -100,6 +134,20 @@ public class Player : KinematicBody2D
 
         base._PhysicsProcess(delta);
 
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+
+        if(@event is InputEventJoypadButton || @event is InputEventJoypadMotion)
+        {
+            Control = ControlType.Controller;
+        } else
+        {
+            Control = ControlType.Keyboard;
+        }
+
+        base._Input(@event);
     }
 
     public void OnPlayerDead(int health)

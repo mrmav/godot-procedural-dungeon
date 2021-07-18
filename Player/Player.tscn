@@ -92,7 +92,6 @@ rotation = 1.5708
 shape = SubResource( 13 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-visible = false
 current = true
 smoothing_enabled = true
 
