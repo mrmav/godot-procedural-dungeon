@@ -23,6 +23,7 @@ public class Player : KinematicBody2D
     private InvulnerabilityComponent _invulnerability;
     private DamageComponent _damage;
     private MeleeWeapon _melee;
+    private KnockbackComponent _knockback;
 
     public ControlType Control = ControlType.Keyboard;
     public Vector2 LastRightAxis = Vector2.Zero;
@@ -38,6 +39,7 @@ public class Player : KinematicBody2D
         _invulnerability = GetNode<InvulnerabilityComponent>("Invulnerability");
         _damage = GetNode<DamageComponent>("DamageComponent");
         _melee = GetNode("WeaponHandle").GetChild<MeleeWeapon>(0);
+        _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
@@ -47,7 +49,8 @@ public class Player : KinematicBody2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        if(_velocity.Length() != 0)
+        float movementThreshold = 0.1f;
+        if(Mathf.Abs(_velocity.Length()) >= movementThreshold)
         {
             _animation.Play("walk");
             
@@ -118,6 +121,7 @@ public class Player : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
 
+
         Vector2 direction = Vector2.Zero;
 
         direction.y -= Input.GetActionStrength("player_move_up");
@@ -129,6 +133,7 @@ public class Player : KinematicBody2D
         direction = direction.Normalized();
 
         _velocity = direction * Speed;
+        _velocity += _knockback.CurrentValue;
 
         _velocity = MoveAndSlide(_velocity);
 
@@ -161,13 +166,13 @@ public class Player : KinematicBody2D
         //GD.Print($"player is now vulnerable.");
     }
     
-    public void OnDamageTaken(int amount, string who)
+    public void OnDamageTaken(Damage damageInfo)
     {
         if(_invulnerability.IsVulnerable)
         {
-            _health.Damage(amount);
+            _health.Damage(damageInfo.Amount);
+            _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);
             _invulnerability.SetInvulnerable();
-            GD.Print($"{who} dealt {amount} of damage to {Name}.");
         }
         
     }

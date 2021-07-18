@@ -31,6 +31,7 @@ public class Slime : KinematicBody2D
     private KinematicBody2D _targetFoe = null;
     private DamageComponent _damage;
     private HealthComponent _health;
+    private KnockbackComponent _knockback;
         
     private AnimatedSprite _animation;
     private Area2D _damageArea;
@@ -51,6 +52,7 @@ public class Slime : KinematicBody2D
         _targetFoe = GetParent().GetNode<KinematicBody2D>("Player");
         _damage = GetNode<DamageComponent>("DamageComponent");
         _health = GetNode<HealthComponent>("HealthComponent");
+        _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
 
         _health.Health = Health;
 
@@ -100,6 +102,8 @@ public class Slime : KinematicBody2D
 
         }
 
+        _velocity += _knockback.CurrentValue;
+
         if(Mode == Behaviour.Wander)
         {    
             _velocity = Vector2.Zero;
@@ -119,7 +123,7 @@ public class Slime : KinematicBody2D
                 Vector2 direction = _target - Position;
                 direction = direction.Normalized();
 
-                _velocity = direction * Speed;
+                _velocity += direction * Speed;
                 MoveAndSlide(_velocity);
 
                 float distMargin = 3f;
@@ -138,9 +142,11 @@ public class Slime : KinematicBody2D
             Vector2 direction = _targetFoe.Position - Position;
             direction = direction.Normalized();
 
-            _velocity = direction * (Speed * 1.2f);
+            _velocity += direction * (Speed * 1.2f);
             MoveAndSlide(_velocity);
         }
+
+        _velocity = Vector2.Zero;
 
         base._PhysicsProcess(delta);
     }
@@ -175,10 +181,10 @@ public class Slime : KinematicBody2D
         _walkDurationTimer.Stop();
     }
 
-    private void OnDamageTaken(int amount, string who)
+    private void OnDamageTaken(Damage damageInfo)
     {
-        _health.Damage(amount);
-        GD.Print($"{who} dealt {amount} damage to {Name}");
+        _health.Damage(damageInfo.Amount);
+        _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);
     }
 
     private void OnDeath(int health)

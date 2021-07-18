@@ -36,6 +36,7 @@ script = ExtResource( 3 )
 __meta__ = {
 "_editor_description_": ""
 }
+Text = "text"
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2( 0, -10.0585 )

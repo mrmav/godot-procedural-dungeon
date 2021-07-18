@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Art/slime.png" type="Texture" id=1]
 [ext_resource path="res://Foes/Slime/Slime.cs" type="Script" id=2]
 [ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Components/HealthComponent/HealthComponent.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Components/KnockbackComponent/KnockbackComponent.tscn" type="PackedScene" id=5]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -11,11 +12,11 @@ region = Rect2( 0, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 1 )
-region = Rect2( 16, 0, 16, 16 )
+region = Rect2( 16, 32, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 1 )
-region = Rect2( 16, 32, 16, 16 )
+region = Rect2( 16, 0, 16, 16 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
@@ -26,12 +27,12 @@ animations = [ {
 }, {
 "frames": [ SubResource( 2 ) ],
 "loop": true,
-"name": "walk",
+"name": "damage",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 3 ) ],
 "loop": true,
-"name": "damage",
+"name": "walk",
 "speed": 5.0
 } ]
 
@@ -76,11 +77,14 @@ one_shot = true
 
 [node name="DamageComponent" parent="." instance=ExtResource( 3 )]
 Group = "slime"
-GroupsToDamage = PoolStringArray( "hero" )
 AmountOfDamage = 2
+GroupsToDamage = PoolStringArray( "hero" )
+Knockback = 200
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 7 )
 
 [node name="HealthComponent" parent="." instance=ExtResource( 4 )]
 Health = 5
+
+[node name="KnockbackComponent" parent="." instance=ExtResource( 5 )]
