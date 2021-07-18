@@ -79,6 +79,7 @@ one_shot = true
 Group = "slime"
 AmountOfDamage = 2
 GroupsToDamage = PoolStringArray( "hero" )
+Knockback = 200
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 7 )

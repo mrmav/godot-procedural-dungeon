@@ -2,5 +2,5 @@
 
 [ext_resource path="res://Components/KnockbackComponent/KnockbackComponent.cs" type="Script" id=1]
 
-[node name="Knockback" type="Node"]
+[node name="KnockbackComponent" type="Node"]
 script = ExtResource( 1 )
