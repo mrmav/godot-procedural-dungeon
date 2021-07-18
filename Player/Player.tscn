@@ -84,6 +84,7 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
+frame = 2
 playing = true
 offset = Vector2( 0, -10 )
 
@@ -101,7 +102,7 @@ Damage = 2
 [node name="HealthComponent" parent="." instance=ExtResource( 5 )]
 
 [node name="Invulnerability" parent="." instance=ExtResource( 6 )]
-Duration = 3.0
+Duration = 0.25
 
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 Group = "hero"

@@ -49,7 +49,8 @@ public class Player : KinematicBody2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        if(_velocity.Length() != 0)
+        float movementThreshold = 0.1f;
+        if(Mathf.Abs(_velocity.Length()) >= movementThreshold)
         {
             _animation.Play("walk");
             
