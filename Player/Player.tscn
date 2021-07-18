@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Art/ronWalk.png" type="Texture" id=1]
 [ext_resource path="res://Art/ronIdle.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Components/InvulnerabilityComponent/InvulnerabilityComponent.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Components/KnockbackComponent/KnockbackComponent.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Components/DashComponent/DashComponent.tscn" type="PackedScene" id=9]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -68,7 +69,7 @@ animations = [ {
 
 [sub_resource type="CapsuleShape2D" id=13]
 radius = 5.0
-height = 6.0
+height = 4.0
 
 [sub_resource type="CapsuleShape2D" id=14]
 radius = 4.0
@@ -99,17 +100,24 @@ shape = SubResource( 13 )
 position = Vector2( 5, 1 )
 Damage = 2
 
-[node name="HealthComponent" parent="." instance=ExtResource( 5 )]
-
-[node name="Invulnerability" parent="." instance=ExtResource( 6 )]
-Duration = 0.25
-
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 Group = "hero"
-AmountOfDamage = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 position = Vector2( 0, 2 )
 shape = SubResource( 14 )
 
+[node name="HealthComponent" parent="." instance=ExtResource( 5 )]
+
 [node name="KnockbackComponent" parent="." instance=ExtResource( 8 )]
+
+[node name="Invulnerability" parent="." instance=ExtResource( 6 )]
+
+[node name="DashComponent" parent="." instance=ExtResource( 9 )]
+Speed = 400
+Dampening = 0.9
+Cooldown = 0.5
+DashFinishThreshold = 60.0
+MakeDamage = true
+DamageComponent = NodePath("../DamageComponent")
+GroupsToDamageWhileDashing = [ "foe" ]
