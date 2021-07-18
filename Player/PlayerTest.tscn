@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://TileLevel/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Foes/Slime/Slime.tscn" type="PackedScene" id=3]
+[ext_resource path="res://CameraFocusPoint/CameraFocusPoint.tscn" type="PackedScene" id=4]
 
 [node name="World" type="Node2D"]
 
@@ -42,8 +43,5 @@ ControllerDeadzone = 0.4
 
 [node name="NotificationContainer" type="Node" parent="."]
 
-[node name="CameraFocusPoint" type="Position2D" parent="."]
-
-[node name="Camera2D" type="Camera2D" parent="CameraFocusPoint"]
-current = true
-smoothing_enabled = true
+[node name="CameraFocusPoint" parent="." instance=ExtResource( 4 )]
+NodeToFollow = NodePath("../YSort/Player")

@@ -62,8 +62,8 @@ public class Player : KinematicBody2D
         if(Control == ControlType.Keyboard)
         {
             focusPoint = GetGlobalMousePosition();
-            CameraFocusPoint = GlobalPosition - focusPoint;
-            CameraFocusPoint = CameraFocusPoint.Normalized() * CameraExtendZone;
+            CameraFocusPoint = focusPoint - GlobalPosition;
+            CameraFocusPoint = CameraFocusPoint.Normalized() * CameraExtendZone + GlobalPosition;
             
         } else if(Control == ControlType.Controller)
         {
