@@ -9,6 +9,9 @@ public class Cursor : Sprite
 
     [Export]
     public Vector2 CursorOffset = Vector2.Zero;
+    
+    [Export]
+    public float CursorExtend = 0f;
 
     [Export]
     public NodePath PlayerPath;
@@ -34,9 +37,10 @@ public class Cursor : Sprite
 
         } else if(_player.Control == Player.ControlType.Controller)
         {
-            GlobalPosition = _player.CameraFocusPoint;
+            GlobalPosition =  _player.GlobalPosition + _player.LastRightAxis * CursorExtend + CursorOffset;
         }
-        
+       
+
         base._Process(delta);
     }
 }

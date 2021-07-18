@@ -42,7 +42,7 @@ position = Vector2( 409, 253 )
 [node name="Player" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 304, 191 )
 ControllerDeadzone = 0.4
-CameraExtendZone = 32.0
+CameraExtendZone = 16.0
 
 [node name="NotificationContainer" type="Node" parent="."]
 
@@ -52,4 +52,5 @@ NodeToFollow = NodePath("../YSort/Player")
 [node name="Cursor" type="Sprite" parent="."]
 script = ExtResource( 6 )
 CursorTexture = ExtResource( 5 )
+CursorExtend = 32.0
 PlayerPath = NodePath("../YSort/Player")

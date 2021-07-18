@@ -25,7 +25,7 @@ public class Player : KinematicBody2D
     private MeleeWeapon _melee;
 
     public ControlType Control = ControlType.Keyboard;
-    private Vector2 _lastRightAxis = Vector2.Zero;
+    public Vector2 LastRightAxis = Vector2.Zero;
 
     public Vector2 CameraFocusPoint = Vector2.Zero;
     
@@ -63,7 +63,8 @@ public class Player : KinematicBody2D
         {
             focusPoint = GetGlobalMousePosition();
             CameraFocusPoint = focusPoint - GlobalPosition;
-            CameraFocusPoint = CameraFocusPoint.Normalized() * CameraExtendZone + GlobalPosition;
+            LastRightAxis = CameraFocusPoint.Normalized();
+            CameraFocusPoint = LastRightAxis * CameraExtendZone + GlobalPosition;
             
         } else if(Control == ControlType.Controller)
         {
@@ -72,11 +73,10 @@ public class Player : KinematicBody2D
             if(lookDir.Length() >= ControllerDeadzone)
             {                
                 lookDir = lookDir.Normalized();
-                lookDir *= CameraExtendZone;
-                _lastRightAxis = lookDir;
+                LastRightAxis = lookDir;
             }
             
-            focusPoint = GlobalPosition + _lastRightAxis;
+            focusPoint = GlobalPosition + LastRightAxis * CameraExtendZone;
             CameraFocusPoint = focusPoint;
 
         }
