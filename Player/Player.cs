@@ -29,7 +29,7 @@ public class Player : KinematicBody2D
     public ControlType Control = ControlType.Keyboard;
     public Vector2 LastRightAxis = Vector2.Zero;
 
-    public Vector2 CameraFocusPoint = Vector2.Zero;
+    public Vector2 CameraFocusPoint;
 
     private Vector2 _lastDirection;
 
@@ -56,6 +56,9 @@ public class Player : KinematicBody2D
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
         _damage.Connect("DamageTaken", this, nameof(OnDamageTaken));
+
+        CameraFocusPoint = Vector2.Right * CameraExtendZone;
+
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

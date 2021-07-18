@@ -44,6 +44,32 @@ position = Vector2( 304, 191 )
 ControllerDeadzone = 0.4
 CameraExtendZone = 16.0
 
+[node name="Slime9" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 56, 45 )
+
+[node name="Slime10" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 267, 397 )
+
+[node name="Slime11" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 454, 389 )
+
+[node name="Slime12" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 454, 68 )
+
+[node name="Slime13" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 329, 298 )
+
+[node name="Slime14" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 80, 274 )
+
+[node name="Slime15" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 182, 306 )
+scale = Vector2( 4.13169, 4.13169 )
+Health = 100
+Speed = 5.0
+Damage = 5
+WalkTime = 6.0
+
 [node name="NotificationContainer" type="Node" parent="."]
 
 [node name="CameraFocusPoint" parent="." instance=ExtResource( 4 )]

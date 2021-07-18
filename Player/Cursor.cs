@@ -26,6 +26,8 @@ public class Cursor : Sprite
         _player = GetNode<Player>(PlayerPath);
 
         Input.SetMouseMode(Input.MouseMode.Hidden);
+
+        GlobalPosition = _player.GlobalPosition + Vector2.Right * CursorExtend + CursorOffset;
     }
 
     public override void _Process(float delta)

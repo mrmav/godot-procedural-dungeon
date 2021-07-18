@@ -71,14 +71,7 @@ public class Slime : KinematicBody2D
      // Called every frame. 'delta' is the elapsed time since the previous frame.
      public override void _Process(float delta)
      {
-         if(_velocity.Length() != 0)
-        {
-            _animation.Play("walk");
-            _animation.FlipH = _velocity.x < 0;
-        } else
-        {
-            _animation.Play("idle");            
-        }
+        
      }
 
     public override void _PhysicsProcess(float delta)
@@ -101,7 +94,6 @@ public class Slime : KinematicBody2D
 
 
         }
-
         _velocity += _knockback.CurrentValue;
 
         if(Mode == Behaviour.Wander)
@@ -144,6 +136,15 @@ public class Slime : KinematicBody2D
 
             _velocity += direction * (Speed * 1.2f);
             MoveAndSlide(_velocity);
+        }
+        
+        if(_velocity.Length() != 0)
+        {
+            _animation.Play("walk");
+            _animation.FlipH = _velocity.x < 0;
+        } else
+        {
+            _animation.Play("idle");            
         }
 
         _velocity = Vector2.Zero;
