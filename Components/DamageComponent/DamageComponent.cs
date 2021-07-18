@@ -15,15 +15,20 @@ public class DamageComponent : Area2D
     [Export]
     public string Group = "default";
     [Export]
-    public string[] GroupsToDamage;
+    public List<string> GroupsToDamage;
     [Export]
     public bool OneShot = false;
     [Export]
     public bool DoDamage = true;
     [Export]
     public int Knockback = 100;
+    [Export]
+    public bool IgnoreAllDamage = false;
+    [Export]
+    public bool DamageOnce = false;
 
     private List<DamageComponent> _areasToDamage;
+    private List<DamageComponent> _damaged;
     
     private bool _firstRun = true;
 
@@ -32,6 +37,7 @@ public class DamageComponent : Area2D
         AddToGroup(Group);
 
         _areasToDamage = new List<DamageComponent>();
+        _damaged = new List<DamageComponent>();
 
     }
 
@@ -42,8 +48,9 @@ public class DamageComponent : Area2D
         {
 
             // setup
+            _areasToDamage.Clear();
 
-            for(int i = 0; i < GroupsToDamage.Length; i++)
+            for(int i = 0; i < GroupsToDamage.Count; i++)
             {
                 Godot.Collections.Array nodes = GetTree().GetNodesInGroup(GroupsToDamage[i]);
 
@@ -54,7 +61,10 @@ public class DamageComponent : Area2D
 
             }            
 
-            _firstRun = false;
+            //_firstRun = false;  // commenting this line makes getting the nodes at all times
+                                  // this way, is possible to add and remove nodes from groups
+                                  // at runtime, without the need to refresh the lists, or test
+                                  // if an area is valid (wasn't "queue_free'd")
 
         }
 
@@ -88,16 +98,41 @@ public class DamageComponent : Area2D
                         
                     );
 
-                    EmitSignal(nameof(DamageDealt), damageInfo);
-                    other.EmitSignal(nameof(DamageTaken), damageInfo);
-                }
+                    // if the other area is not set to ignore damage
+                    if(!other.IgnoreAllDamage)
+                    {                        
+                        // then check if this area is set to only damage once
+                        if(DamageOnce)
+                        {
+                            if(!(_damaged.Contains(other)))
+                            {
+                                SendSignals(damageInfo, other);
+                                _damaged.Add(other);
+                            }
 
+                        } else
+                        {
+                            SendSignals(damageInfo, other);
+                        }
+                    }
+                }
             }
 
             DoDamage = !OneShot;
 
         }
 
+    }
+
+    private void SendSignals(Damage damageInfo, DamageComponent other)
+    {
+        EmitSignal(nameof(DamageDealt), damageInfo);
+        other.EmitSignal(nameof(DamageTaken), damageInfo);
+    }
+
+    public void ResetDamaged()
+    {
+        _damaged.Clear();
     }
 
 }

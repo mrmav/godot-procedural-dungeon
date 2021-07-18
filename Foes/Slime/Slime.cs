@@ -184,7 +184,7 @@ public class Slime : KinematicBody2D
     private void OnDamageTaken(Damage damageInfo)
     {
         _health.Damage(damageInfo.Amount);
-        _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);
+        _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);        
     }
 
     private void OnDeath(int health)

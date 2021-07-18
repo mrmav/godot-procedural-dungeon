@@ -24,11 +24,22 @@ public class Player : KinematicBody2D
     private DamageComponent _damage;
     private MeleeWeapon _melee;
     private KnockbackComponent _knockback;
+    private DashComponent _dash;
 
     public ControlType Control = ControlType.Keyboard;
     public Vector2 LastRightAxis = Vector2.Zero;
 
     public Vector2 CameraFocusPoint = Vector2.Zero;
+
+    private Vector2 _lastDirection;
+
+    public bool IsDashing
+    {
+        get
+        {
+            return _dash.IsDashing;
+        }
+    }
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -40,6 +51,7 @@ public class Player : KinematicBody2D
         _damage = GetNode<DamageComponent>("DamageComponent");
         _melee = GetNode("WeaponHandle").GetChild<MeleeWeapon>(0);
         _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
+        _dash = GetNode<DashComponent>("DashComponent");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
@@ -85,7 +97,16 @@ public class Player : KinematicBody2D
         }
 
         _weaponHandle.LookAt(focusPoint);
-            
+        
+        if(_dash.IsDashing)
+        {
+            focusPoint = _dash.CurrentDashVelocity + Position;
+            _weaponHandle.Visible = false;
+        } else
+        {
+            _weaponHandle.Visible = true;
+        }
+        
         if(focusPoint.x < Position.x)
         {
             _weaponHandle.Scale = new Vector2(1, -1);
@@ -96,9 +117,17 @@ public class Player : KinematicBody2D
             _animation.FlipH = false;
         }
 
-        if(Input.IsActionJustPressed("player_attack"))
+        if(Input.IsActionJustPressed("player_attack") && !_dash.IsDashing)
         {
             _melee.Attack();
+        }
+
+        if(Input.IsActionJustPressed("player_dash"))
+        {
+            // should the hero dash in the input direction
+            // or in the poiting direction
+            //_dash.Dash(LastRightAxis);
+            _dash.Dash(_lastDirection);
         }
 
         if(!_invulnerability.IsVulnerable)
@@ -120,8 +149,7 @@ public class Player : KinematicBody2D
 
     public override void _PhysicsProcess(float delta)
     {
-
-
+        
         Vector2 direction = Vector2.Zero;
 
         direction.y -= Input.GetActionStrength("player_move_up");
@@ -131,9 +159,18 @@ public class Player : KinematicBody2D
         direction.x += Input.GetActionStrength("player_move_right");
 
         direction = direction.Normalized();
+        _lastDirection = direction;
 
+        // adds the player movement input
         _velocity = direction * Speed;
+
+        // adds the knockback set by knockback component
         _velocity += _knockback.CurrentValue;
+        
+        // adds the dash contribution to the velocity
+        // dashing resets all velocity
+        if(_dash.IsDashing)
+            _velocity = _dash.CurrentDashVelocity;
 
         _velocity = MoveAndSlide(_velocity);
 

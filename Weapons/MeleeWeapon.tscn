@@ -48,10 +48,10 @@ offset = Vector2( 7.49375, 0 )
 [node name="DamageComponent" parent="." instance=ExtResource( 2 )]
 position = Vector2( 1, 1 )
 Group = "weapon"
+OneShot = true
 AmountOfDamage = 4
 DoDamage = false
-OneShot = true
-GroupsToDamage = PoolStringArray( "slime" )
+GroupsToDamage = PoolStringArray( "foe" )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 1 )

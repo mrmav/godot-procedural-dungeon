@@ -39,7 +39,8 @@ public class Cursor : Sprite
         {
             GlobalPosition =  _player.GlobalPosition + _player.LastRightAxis * CursorExtend + CursorOffset;
         }
-       
+
+        Visible = !_player.IsDashing;
 
         base._Process(delta);
     }
