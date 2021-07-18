@@ -62,7 +62,7 @@ position = Vector2( 329, 298 )
 [node name="Slime14" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 80, 274 )
 
-[node name="Slime15" parent="YSort" instance=ExtResource( 3 )]
+[node name="BossSlime" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 182, 306 )
 scale = Vector2( 4.13169, 4.13169 )
 Health = 100
