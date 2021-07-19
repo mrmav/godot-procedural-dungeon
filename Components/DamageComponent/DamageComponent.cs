@@ -21,11 +21,13 @@ public class DamageComponent : Area2D
     [Export]
     public bool DoDamage = true;
     [Export]
-    public int Knockback = 100;
+    public int Knockback = 100;    
     [Export]
     public bool IgnoreAllDamage = false;
     [Export]
     public bool DamageOnce = false;
+
+    public bool ApplyKnockback = true;
 
     private List<DamageComponent> _areasToDamage;
     private List<DamageComponent> _damaged;
@@ -90,7 +92,7 @@ public class DamageComponent : Area2D
                     Damage damageInfo = new Damage
                     (
                         AmountOfDamage,
-                        Knockback,
+                        ApplyKnockback ? Knockback : 0,
                         GetParent<Node>(),
                         other.GetParent<Node>(),
                         damageNormal.x,

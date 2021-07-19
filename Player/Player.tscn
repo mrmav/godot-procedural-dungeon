@@ -85,7 +85,6 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
-frame = 2
 playing = true
 offset = Vector2( 0, -10 )
 
@@ -112,6 +111,7 @@ shape = SubResource( 14 )
 [node name="KnockbackComponent" parent="." instance=ExtResource( 8 )]
 
 [node name="Invulnerability" parent="." instance=ExtResource( 6 )]
+Duration = 0.25
 
 [node name="DashComponent" parent="." instance=ExtResource( 9 )]
 Speed = 400

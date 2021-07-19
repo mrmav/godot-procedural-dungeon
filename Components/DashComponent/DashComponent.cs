@@ -77,11 +77,11 @@ public class DashComponent : Node
 
     }
 
-    public void Dash(Vector2 direction)
+    public bool Dash(Vector2 direction)
     {
 
         if(!_canDash)
-            return;
+            return false;
 
         _currentDashVelocity = direction * Speed;
         _isDashing = true;
@@ -91,10 +91,13 @@ public class DashComponent : Node
         if(MakeDamage)
         {
             _damage.DamageOnce = true;
-            AddDamageGroups();
+            _damage.ApplyKnockback = false;
+            AddDamageGroups();            
         }
 
         _canDash = false;
+
+        return true;
         
     }
 
@@ -102,6 +105,7 @@ public class DashComponent : Node
     {        
         _damage.IgnoreAllDamage = false;
         _damage.DamageOnce = false;
+        _damage.ApplyKnockback = true;
         _damage.ResetDamaged();
         RemoveDamageGroups();
     }

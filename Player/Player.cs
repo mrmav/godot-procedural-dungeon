@@ -130,7 +130,7 @@ public class Player : KinematicBody2D
             // should the hero dash in the input direction
             // or in the poiting direction
             //_dash.Dash(LastRightAxis);
-            _dash.Dash(_lastDirection);
+            bool success = _dash.Dash(_lastDirection);            
         }
 
         if(!_invulnerability.IsVulnerable)
