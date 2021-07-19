@@ -16,6 +16,9 @@ public class Cursor : Sprite
     [Export]
     public NodePath PlayerPath;
 
+    [Export]
+    public bool Show = true;
+
     private Player _player;
 
     public override void _Ready()
@@ -28,6 +31,8 @@ public class Cursor : Sprite
         Input.SetMouseMode(Input.MouseMode.Hidden);
 
         GlobalPosition = _player.GlobalPosition + Vector2.Right * CursorExtend + CursorOffset;
+
+        Visible = Show;
     }
 
     public override void _Process(float delta)
@@ -42,7 +47,8 @@ public class Cursor : Sprite
             GlobalPosition =  _player.GlobalPosition + _player.LastRightAxis * CursorExtend + CursorOffset;
         }
 
-        Visible = !_player.IsDashing;
+        if(Show)
+            Visible = !_player.IsDashing;
 
         base._Process(delta);
     }
