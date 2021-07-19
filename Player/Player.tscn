@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Art/ronWalk.png" type="Texture" id=1]
 [ext_resource path="res://Art/ronIdle.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Components/KnockbackComponent/KnockbackComponent.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Components/DashComponent/DashComponent.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Components/FlashComponent/FlashComponent.tscn" type="PackedScene" id=11]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -85,10 +86,12 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
+frame = 1
 playing = true
 offset = Vector2( 0, -10 )
 
 [node name="BodyCollisionShape" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, 5 )
 rotation = 1.5708
 shape = SubResource( 13 )
@@ -100,6 +103,7 @@ position = Vector2( 5, 1 )
 Damage = 2
 
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
+visible = false
 Group = "hero"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
@@ -121,3 +125,7 @@ DashFinishThreshold = 60.0
 MakeDamage = true
 DamageComponent = NodePath("../DamageComponent")
 GroupsToDamageWhileDashing = [ "foe" ]
+
+[node name="FlashComponent" parent="." instance=ExtResource( 11 )]
+FlashTime = 0.1
+FlashableItem = NodePath("../AnimatedSprite")

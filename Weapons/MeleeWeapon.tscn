@@ -46,12 +46,13 @@ texture = ExtResource( 1 )
 offset = Vector2( 7.49375, 0 )
 
 [node name="DamageComponent" parent="." instance=ExtResource( 2 )]
+visible = false
 position = Vector2( 1, 1 )
 Group = "weapon"
-OneShot = true
 AmountOfDamage = 4
-DoDamage = false
 GroupsToDamage = PoolStringArray( "foe" )
+OneShot = true
+DoDamage = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 1 )
