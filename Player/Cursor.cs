@@ -41,10 +41,12 @@ public class Cursor : Sprite
         if(_player.Control == Player.ControlType.Keyboard)
         {
             GlobalPosition = GetGlobalMousePosition() + CursorOffset;
+            Show = true;
 
         } else if(_player.Control == Player.ControlType.Controller)
         {
             GlobalPosition =  _player.GlobalPosition + _player.LastRightAxis * CursorExtend + CursorOffset;
+            Show = false;
         }
 
         if(Show)

@@ -101,10 +101,18 @@ shape = SubResource( 13 )
 [node name="SimpleSword" parent="WeaponHandle" instance=ExtResource( 4 )]
 position = Vector2( 5, 1 )
 Damage = 2
+CanCancel = true
 
 [node name="Sprite" parent="WeaponHandle/SimpleSword" index="0"]
-position = Vector2( 0, 0 )
-rotation = -1.309
+position = Vector2( 0, 6 )
+rotation = 0.523599
+
+[node name="DashEffect" parent="WeaponHandle/SimpleSword" index="1"]
+position = Vector2( 2, 1 )
+scale = Vector2( 0.546737, 0.546737 )
+
+[node name="DamageComponent" parent="WeaponHandle/SimpleSword" index="2"]
+visible = true
 
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 visible = false
@@ -122,7 +130,6 @@ shape = SubResource( 14 )
 Duration = 0.25
 
 [node name="DashComponent" parent="." instance=ExtResource( 9 )]
-Speed = 400
 Dampening = 0.9
 Cooldown = 0.5
 DashFinishThreshold = 60.0
