@@ -32,6 +32,7 @@ public class Slime : KinematicBody2D
     private DamageComponent _damage;
     private HealthComponent _health;
     private KnockbackComponent _knockback;
+    private FlashComponent _flash;
         
     private AnimatedSprite _animation;
     private Area2D _damageArea;
@@ -53,6 +54,7 @@ public class Slime : KinematicBody2D
         _damage = GetNode<DamageComponent>("DamageComponent");
         _health = GetNode<HealthComponent>("HealthComponent");
         _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
+        _flash = GetNode<FlashComponent>("FlashComponent");
 
         _health.Health = Health;
 
@@ -185,7 +187,8 @@ public class Slime : KinematicBody2D
     private void OnDamageTaken(Damage damageInfo)
     {
         _health.Damage(damageInfo.Amount);
-        _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);        
+        _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);    
+        _flash.SetFlash(true);    
     }
 
     private void OnDeath(int health)

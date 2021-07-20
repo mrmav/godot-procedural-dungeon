@@ -13,7 +13,12 @@ public class MeleeWeapon : Node2D
     [Export]
     public int KnockbackPower = 200;
 
+    [Export]
+    public int DamageFrame = 1;
+
     private DamageComponent _damage;
+        
+    private AnimationPlayer _animation;
 
     public override void _Ready()
     {
@@ -21,7 +26,7 @@ public class MeleeWeapon : Node2D
         _damage.AmountOfDamage = Damage;
         _damage.Knockback = KnockbackPower;
 
-        base._Ready();
+        _animation = GetNode<AnimationPlayer>("AnimationPlayer");
 
     }
 
@@ -29,8 +34,7 @@ public class MeleeWeapon : Node2D
     {
         AnimationPlayer anim = GetNode<AnimationPlayer>("AnimationPlayer");
         anim.Stop();
-        anim.Play("swing", -1, 1.5f);
-        _damage.DoDamage = true;
+        anim.Play("swing", -1);
     }
 
     // public void OnDamageDealt(int amount, string victim)

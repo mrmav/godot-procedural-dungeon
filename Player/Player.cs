@@ -25,6 +25,7 @@ public class Player : KinematicBody2D
     private MeleeWeapon _melee;
     private KnockbackComponent _knockback;
     private DashComponent _dash;
+    private FlashComponent _flash;
 
     public ControlType Control = ControlType.Keyboard;
     public Vector2 LastRightAxis = Vector2.Zero;
@@ -52,6 +53,7 @@ public class Player : KinematicBody2D
         _melee = GetNode("WeaponHandle").GetChild<MeleeWeapon>(0);
         _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
         _dash = GetNode<DashComponent>("DashComponent");
+        _flash = GetNode<FlashComponent>("FlashComponent");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
@@ -213,6 +215,7 @@ public class Player : KinematicBody2D
             _health.Damage(damageInfo.Amount);
             _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);
             _invulnerability.SetInvulnerable();
+            _flash.SetFlash(true);
         }
         
     }
