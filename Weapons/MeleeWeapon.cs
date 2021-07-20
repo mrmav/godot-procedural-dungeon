@@ -19,8 +19,12 @@ public class MeleeWeapon : Node2D
     [Export]
     public bool CanCancel = false;
 
+    [Export]
+    public NodePath SwingAudioPlayer;
+
     private DamageComponent _damage;        
     private AnimationPlayer _animation;
+    private AudioStreamPlayer _swingSfx;
     private bool _isAttacking = false;
 
     public override void _Ready()
@@ -32,15 +36,19 @@ public class MeleeWeapon : Node2D
         _animation = GetNode<AnimationPlayer>("AnimationPlayer");
         _animation.Connect("animation_finished", this, nameof(OnAnimationFinish));    
 
+        _swingSfx = GetNode<AudioStreamPlayer>(SwingAudioPlayer);
+
     }
 
     public void Attack()
     {
         if(!_isAttacking)
         {
-            AnimationPlayer anim = GetNode<AnimationPlayer>("AnimationPlayer");
-            anim.Stop();
-            anim.Play("swing", -1);
+            _animation.Stop();
+            _animation.Play("swing", -1);
+                        
+            _swingSfx.Play();
+            
             _isAttacking = true;
         }
 
