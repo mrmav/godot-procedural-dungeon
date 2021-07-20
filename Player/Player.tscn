@@ -102,6 +102,10 @@ shape = SubResource( 13 )
 position = Vector2( 5, 1 )
 Damage = 2
 
+[node name="Sprite" parent="WeaponHandle/SimpleSword" index="0"]
+position = Vector2( 0, 0 )
+rotation = -1.309
+
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 visible = false
 Group = "hero"
@@ -129,3 +133,5 @@ GroupsToDamageWhileDashing = [ "foe" ]
 [node name="FlashComponent" parent="." instance=ExtResource( 11 )]
 FlashTime = 0.1
 FlashableItem = NodePath("../AnimatedSprite")
+
+[editable path="WeaponHandle/SimpleSword"]
