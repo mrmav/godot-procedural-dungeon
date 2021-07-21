@@ -72,4 +72,3 @@ script = ExtResource( 6 )
 CursorTexture = ExtResource( 5 )
 CursorExtend = 32.0
 PlayerPath = NodePath("../YSort/Player")
-Show = false

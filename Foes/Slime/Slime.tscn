@@ -10,31 +10,31 @@
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
-region = Rect2( 16, 32, 16, 16 )
+region = Rect2( 0, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 16, 16 )
+region = Rect2( 16, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 1 )
-region = Rect2( 16, 0, 16, 16 )
+region = Rect2( 16, 32, 16, 16 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
 "frames": [ SubResource( 1 ) ],
 "loop": true,
-"name": "damage",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 2 ) ],
-"loop": true,
 "name": "idle",
 "speed": 1.0
 }, {
-"frames": [ SubResource( 3 ) ],
+"frames": [ SubResource( 2 ) ],
 "loop": true,
 "name": "walk",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 3 ) ],
+"loop": true,
+"name": "damage",
 "speed": 5.0
 } ]
 
@@ -80,9 +80,9 @@ one_shot = true
 
 [node name="DamageComponent" parent="." instance=ExtResource( 3 )]
 Group = "foe"
+GroupsToDamage = PoolStringArray( "hero" )
 Knockback = 200
 AmountOfDamage = 2
-GroupsToDamage = PoolStringArray( "hero" )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 7 )
@@ -97,4 +97,5 @@ FlashTime = 0.1
 FlashableItem = NodePath("../AnimatedSprite")
 
 [node name="Hitsfx" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
 stream = ExtResource( 7 )

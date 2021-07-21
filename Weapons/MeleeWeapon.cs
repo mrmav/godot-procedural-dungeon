@@ -22,6 +22,7 @@ public class MeleeWeapon : Node2D
     [Export]
     public NodePath SwingAudioPlayer;
 
+    private HitstopComponent _hitstop;
     private DamageComponent _damage;        
     private AnimationPlayer _animation;
     private AudioStreamPlayer _swingSfx;
@@ -32,9 +33,12 @@ public class MeleeWeapon : Node2D
         _damage = GetNode<DamageComponent>("DamageComponent");
         _damage.AmountOfDamage = Damage;
         _damage.Knockback = KnockbackPower;
+        _damage.Connect("DamageDealt", this, nameof(OnDamageDealt));
 
         _animation = GetNode<AnimationPlayer>("AnimationPlayer");
-        _animation.Connect("animation_finished", this, nameof(OnAnimationFinish));    
+        _animation.Connect("animation_finished", this, nameof(OnAnimationFinish));  
+
+        _hitstop = GetNode<HitstopComponent>("HitstopComponent");  
 
         _swingSfx = GetNode<AudioStreamPlayer>(SwingAudioPlayer);
 
@@ -65,12 +69,10 @@ public class MeleeWeapon : Node2D
         GD.Print("anim finished");
     }
 
-    // public void OnDamageDealt(int amount, string victim)
-    // {
-        
-    //     EmitSignal(nameof(DamageDealt), amount, victim);
-        
-    // }
+    public void OnDamageDealt(Damage info)
+    {
+        _hitstop.StartFreeze();
+    }
 
 }
 
