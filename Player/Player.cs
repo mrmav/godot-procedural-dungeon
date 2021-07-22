@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Player : KinematicBody2D
+public class Player : BaseMob
 {
     public enum ControlType
     {
@@ -26,6 +26,9 @@ public class Player : KinematicBody2D
     private KnockbackComponent _knockback;
     private DashComponent _dash;
     private FlashComponent _flash;
+    private HitstopComponent _hitstop;
+
+    private AudioStreamPlayer _hitsfx;
 
     public ControlType Control = ControlType.Keyboard;
     public Vector2 LastRightAxis = Vector2.Zero;
@@ -54,6 +57,9 @@ public class Player : KinematicBody2D
         _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
         _dash = GetNode<DashComponent>("DashComponent");
         _flash = GetNode<FlashComponent>("FlashComponent");
+        _hitstop = GetNode<HitstopComponent>("HitstopComponent");
+
+        _hitsfx = GetNode<AudioStreamPlayer>("HitSfx");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
@@ -61,11 +67,15 @@ public class Player : KinematicBody2D
 
         CameraFocusPoint = Vector2.Right * CameraExtendZone;
 
+        GD.Print("player ready: pause mode is: " + GetTree().Paused);
+        GetTree().Paused = false;
+
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
+
         float movementThreshold = 0.1f;
         if(Mathf.Abs(_velocity.Length()) >= movementThreshold)
         {
@@ -154,7 +164,9 @@ public class Player : KinematicBody2D
 
     public override void _PhysicsProcess(float delta)
     {
-        
+        if(_freeze)
+            return;
+
         Vector2 direction = Vector2.Zero;
 
         direction.y -= Input.GetActionStrength("player_move_up");
@@ -199,7 +211,7 @@ public class Player : KinematicBody2D
 
     public void OnPlayerDead(int health)
     {
-        GD.Print($"Player should have died with {health} health.");
+        GetTree().ChangeScene(GetTree().CurrentScene.Filename);        
     }
 
     public void OnInvulnerabilityLifted()
@@ -216,6 +228,8 @@ public class Player : KinematicBody2D
             _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);
             _invulnerability.SetInvulnerable();
             _flash.SetFlash(true);
+            _hitsfx.Play();
+            _hitstop.StartFreeze();
         }
         
     }

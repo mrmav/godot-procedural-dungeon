@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Creature_action_attack_gore_01.wav-1d3d16be3ebd7a4d3172b81315a7c6ec.sample"
+
+[deps]
+
+source_file="res://Sfx/Creature_action_attack_gore_01.wav"
+dest_files=[ "res://.import/Creature_action_attack_gore_01.wav-1d3d16be3ebd7a4d3172b81315a7c6ec.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

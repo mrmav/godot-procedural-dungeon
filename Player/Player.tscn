@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Art/ronWalk.png" type="Texture" id=1]
 [ext_resource path="res://Art/ronIdle.png" type="Texture" id=2]
@@ -9,7 +9,9 @@
 [ext_resource path="res://Components/DamageComponent/DamageComponent.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Components/KnockbackComponent/KnockbackComponent.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Components/DashComponent/DashComponent.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Components/HitstopComponent/HitstopComponent.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Components/FlashComponent/FlashComponent.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Sfx/Creature_action_attack_gore_01.wav" type="AudioStream" id=12]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -86,7 +88,6 @@ Speed = 100.0
 position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
-frame = 1
 playing = true
 offset = Vector2( 0, -10 )
 
@@ -101,10 +102,21 @@ shape = SubResource( 13 )
 [node name="SimpleSword" parent="WeaponHandle" instance=ExtResource( 4 )]
 position = Vector2( 5, 1 )
 Damage = 2
+CanCancel = false
 
 [node name="Sprite" parent="WeaponHandle/SimpleSword" index="0"]
 position = Vector2( 0, 0 )
 rotation = -1.309
+
+[node name="DashEffect" parent="WeaponHandle/SimpleSword" index="1"]
+position = Vector2( 2, 1 )
+scale = Vector2( 0.546737, 0.546737 )
+
+[node name="DamageComponent" parent="WeaponHandle/SimpleSword" index="2"]
+visible = true
+
+[node name="HitstopComponent" parent="WeaponHandle/SimpleSword" index="5"]
+FreezeFrames = 4
 
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 visible = false
@@ -122,7 +134,6 @@ shape = SubResource( 14 )
 Duration = 0.25
 
 [node name="DashComponent" parent="." instance=ExtResource( 9 )]
-Speed = 400
 Dampening = 0.9
 Cooldown = 0.5
 DashFinishThreshold = 60.0
@@ -133,5 +144,13 @@ GroupsToDamageWhileDashing = [ "foe" ]
 [node name="FlashComponent" parent="." instance=ExtResource( 11 )]
 FlashTime = 0.1
 FlashableItem = NodePath("../AnimatedSprite")
+
+[node name="HitstopComponent" parent="." instance=ExtResource( 10 )]
+FreezeFrames = 8
+SlowMotionProbability = -1.0
+
+[node name="HitSfx" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 12 )
 
 [editable path="WeaponHandle/SimpleSword"]

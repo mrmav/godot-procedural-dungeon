@@ -32,7 +32,7 @@ public class HealthComponent : Node
         }
 
         TextPopup n = (TextPopup)_notification.Instance();
-        n.TextColor = Colors.Red;
+        n.TextColor = Colors.OrangeRed;
         n.Text = string.Concat("-", amount);
         n.Position = ((Node2D)GetParent()).Position;
                 

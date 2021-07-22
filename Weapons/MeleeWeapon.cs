@@ -16,33 +16,63 @@ public class MeleeWeapon : Node2D
     [Export]
     public int DamageFrame = 1;
 
-    private DamageComponent _damage;
-        
+    [Export]
+    public bool CanCancel = false;
+
+    [Export]
+    public NodePath SwingAudioPlayer;
+
+    private HitstopComponent _hitstop;
+    private DamageComponent _damage;        
     private AnimationPlayer _animation;
+    private AudioStreamPlayer _swingSfx;
+    private bool _isAttacking = false;
 
     public override void _Ready()
     {
         _damage = GetNode<DamageComponent>("DamageComponent");
         _damage.AmountOfDamage = Damage;
         _damage.Knockback = KnockbackPower;
+        _damage.Connect("DamageDealt", this, nameof(OnDamageDealt));
 
         _animation = GetNode<AnimationPlayer>("AnimationPlayer");
+        _animation.Connect("animation_finished", this, nameof(OnAnimationFinish));  
+
+        _hitstop = GetNode<HitstopComponent>("HitstopComponent");  
+
+        _swingSfx = GetNode<AudioStreamPlayer>(SwingAudioPlayer);
 
     }
 
     public void Attack()
     {
-        AnimationPlayer anim = GetNode<AnimationPlayer>("AnimationPlayer");
-        anim.Stop();
-        anim.Play("swing", -1);
+        if(!_isAttacking)
+        {
+            _animation.Stop();
+            _animation.Play("swing", -1);
+                        
+            _swingSfx.Play();
+            
+            _isAttacking = true;
+        }
+
+        if(CanCancel && !_isAttacking)
+        {
+            _isAttacking = false;
+            Attack();
+        }
     }
 
-    // public void OnDamageDealt(int amount, string victim)
-    // {
-        
-    //     EmitSignal(nameof(DamageDealt), amount, victim);
-        
-    // }
+    private void OnAnimationFinish(string anim)
+    {
+        _isAttacking = false;
+        GD.Print("anim finished");
+    }
+
+    public void OnDamageDealt(Damage info)
+    {
+        _hitstop.StartFreeze();
+    }
 
 }
 

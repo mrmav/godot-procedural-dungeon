@@ -17,7 +17,7 @@ public class Cursor : Sprite
     public NodePath PlayerPath;
 
     [Export]
-    public bool Show = true;
+    public bool DoShow = true;
 
     private Player _player;
 
@@ -32,7 +32,7 @@ public class Cursor : Sprite
 
         GlobalPosition = _player.GlobalPosition + Vector2.Right * CursorExtend + CursorOffset;
 
-        Visible = Show;
+        Visible = DoShow;
     }
 
     public override void _Process(float delta)
@@ -41,14 +41,18 @@ public class Cursor : Sprite
         if(_player.Control == Player.ControlType.Keyboard)
         {
             GlobalPosition = GetGlobalMousePosition() + CursorOffset;
+            DoShow = true;
 
         } else if(_player.Control == Player.ControlType.Controller)
         {
             GlobalPosition =  _player.GlobalPosition + _player.LastRightAxis * CursorExtend + CursorOffset;
+            DoShow = false;
         }
 
-        if(Show)
+        if(DoShow)
             Visible = !_player.IsDashing;
+        else
+            Visible = false;
 
         base._Process(delta);
     }

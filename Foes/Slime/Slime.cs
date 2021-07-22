@@ -24,7 +24,9 @@ public class Slime : KinematicBody2D
     [Export]
     public float NewTargetTime = 2f;
     [Export]
-    public float WalkTime = 4f;  
+    public float WalkTime = 4f;
+    [Export]
+    public NodePath HitAudioPlayer;
 
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _target = Vector2.Zero;    
@@ -33,7 +35,8 @@ public class Slime : KinematicBody2D
     private HealthComponent _health;
     private KnockbackComponent _knockback;
     private FlashComponent _flash;
-        
+    
+    private AudioStreamPlayer _hitSfx;
     private AnimatedSprite _animation;
     private Area2D _damageArea;
     private Area2D _detectArea;
@@ -55,6 +58,7 @@ public class Slime : KinematicBody2D
         _health = GetNode<HealthComponent>("HealthComponent");
         _knockback = GetNode<KnockbackComponent>("KnockbackComponent");
         _flash = GetNode<FlashComponent>("FlashComponent");
+        _hitSfx = GetNode<AudioStreamPlayer>(HitAudioPlayer);
 
         _health.Health = Health;
 
@@ -188,7 +192,8 @@ public class Slime : KinematicBody2D
     {
         _health.Damage(damageInfo.Amount);
         _knockback.SetKnockback(damageInfo.Normal, damageInfo.Knockback);    
-        _flash.SetFlash(true);    
+        _flash.SetFlash(true);
+        _hitSfx.Play();
     }
 
     private void OnDeath(int health)
