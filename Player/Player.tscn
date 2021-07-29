@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Art/ronWalk.png" type="Texture" id=1]
 [ext_resource path="res://Art/ronIdle.png" type="Texture" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://Components/HitstopComponent/HitstopComponent.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Components/FlashComponent/FlashComponent.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Sfx/Creature_action_attack_gore_01.wav" type="AudioStream" id=12]
+[ext_resource path="res://Player/SpringPoint.cs" type="Script" id=14]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -79,13 +80,11 @@ radius = 4.0
 height = 8.0
 
 [node name="Player" type="KinematicBody2D"]
-position = Vector2( 0, -10 )
 collision_layer = 2
 script = ExtResource( 3 )
 Speed = 100.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 0, 10 )
 frames = SubResource( 12 )
 animation = "idle"
 playing = true
@@ -98,6 +97,7 @@ rotation = 1.5708
 shape = SubResource( 13 )
 
 [node name="WeaponHandle" type="Position2D" parent="."]
+position = Vector2( 0, -10 )
 
 [node name="SimpleSword" parent="WeaponHandle" instance=ExtResource( 4 )]
 position = Vector2( 5, 1 )
@@ -114,6 +114,7 @@ scale = Vector2( 0.546737, 0.546737 )
 
 [node name="DamageComponent" parent="WeaponHandle/SimpleSword" index="2"]
 visible = true
+GroupsToDamage = PoolStringArray(  )
 
 [node name="HitstopComponent" parent="WeaponHandle/SimpleSword" index="5"]
 FreezeFrames = 4
@@ -152,5 +153,39 @@ SlowMotionProbability = -1.0
 [node name="HitSfx" type="AudioStreamPlayer" parent="."]
 pause_mode = 2
 stream = ExtResource( 12 )
+
+[node name="Hood" type="Node2D" parent="."]
+position = Vector2( 0, -17 )
+
+[node name="SpringPoint" type="Node2D" parent="Hood"]
+script = ExtResource( 14 )
+Gravity = Vector2( 0, 9.8 )
+IsPinned = true
+Connections = [  ]
+
+[node name="SpringPoint2" type="Node2D" parent="Hood"]
+position = Vector2( -9, -4 )
+script = ExtResource( 14 )
+Gravity = Vector2( 0, 6 )
+Mass = 10.0
+UseLimits = true
+PositionLimits = Rect2( 0, 0, 5, 5 )
+Connections = [ NodePath("../SpringPoint") ]
+
+[node name="SpringPoint3" type="Node2D" parent="Hood"]
+position = Vector2( -11, 6 )
+script = ExtResource( 14 )
+Dampening = 0.95
+Gravity = Vector2( 0, 9.8 )
+Mass = 10.0
+UseLimits = true
+PositionLimits = Rect2( 0, 0, 10, 20 )
+Connections = [ NodePath("../SpringPoint2") ]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.5, 0.5 )
+smoothing_enabled = true
+smoothing_speed = 4.0
 
 [editable path="WeaponHandle/SimpleSword"]
