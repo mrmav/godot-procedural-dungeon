@@ -27,6 +27,7 @@ public class Player : BaseMob
     private DashComponent _dash;
     private FlashComponent _flash;
     private HitstopComponent _hitstop;
+    private SpringSystem _clothingSystem;
 
     private AudioStreamPlayer _hitsfx;
 
@@ -58,6 +59,7 @@ public class Player : BaseMob
         _dash = GetNode<DashComponent>("DashComponent");
         _flash = GetNode<FlashComponent>("FlashComponent");
         _hitstop = GetNode<HitstopComponent>("HitstopComponent");
+        _clothingSystem = GetNode<SpringSystem>("Clothing");
 
         _hitsfx = GetNode<AudioStreamPlayer>("HitSfx");
 
@@ -126,10 +128,14 @@ public class Player : BaseMob
         {
             _weaponHandle.Scale = new Vector2(1, -1);
             _animation.FlipH = true;
+            _clothingSystem.MirrorHorizontal(1);
         } else
         {
             _weaponHandle.Scale = new Vector2(1, 1);
             _animation.FlipH = false;
+            _clothingSystem.MirrorHorizontal(-1);
+
+
         }
 
         if(Input.IsActionJustPressed("player_attack") && !_dash.IsDashing)
@@ -189,10 +195,17 @@ public class Player : BaseMob
         if(_dash.IsDashing)
             _velocity = _dash.CurrentDashVelocity;
 
+        Vector2 clothingForce = new Vector2(_velocity.x * -1 * _clothingSystem.Scale.x, _velocity.y * -1);
+        AddClothForce(clothingForce);
         _velocity = MoveAndSlide(_velocity);
 
         base._PhysicsProcess(delta);
 
+    }
+
+    public void AddClothForce(Vector2 force)
+    {
+        _clothingSystem.AddForce(force);
     }
 
     public override void _Input(InputEvent @event)
