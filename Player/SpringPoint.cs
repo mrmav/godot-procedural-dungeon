@@ -25,7 +25,7 @@ public class SpringPoint : Node2D
     public Rect2 PositionLimits = new Rect2();
 
     [Export]
-    public List<NodePath> Connections = new List<NodePath>();
+    public List<NodePath> Connections;
     
     private float[] _originalDistances;
     private List<SpringPoint> _connections = new List<SpringPoint>();
@@ -65,8 +65,8 @@ public class SpringPoint : Node2D
 
                 }
 
-                AddForce(Gravity);
-                AddForce(springForces);
+                AddForce(Gravity, false);
+                AddForce(springForces, false);
 
                 _velocity += _acceleration;
             
@@ -108,12 +108,20 @@ public class SpringPoint : Node2D
     //     base._Input(@event);
     // }
 
-    public void AddForce(Vector2 force)
+    public void AddForce(Vector2 force, bool random)
     {
         if(IsPinned)
             return;
 
-        _acceleration += force / Mass;
+        Vector2 rand = Vector2.Zero;
+        if(random)
+        {
+            float scale = force.Length() / 10f;
+            float r = (float)(GD.RandRange(-2f * scale, 2f * scale));
+            rand = new Vector2(r, r);
+        }
+
+        _acceleration += (force + rand) / Mass;
     }
 
     public Vector2 GetSpringForce(SpringPoint a, SpringPoint b, float targetLength, float resistance)
@@ -123,7 +131,7 @@ public class SpringPoint : Node2D
 
         float strength = -1 * resistance * (dir.Length() - targetLength);
 
-        result = dir.Normalized() * strength / Mass;
+        result = dir.Normalized() * strength;
 
         return result;
     }
@@ -133,7 +141,7 @@ public class SpringPoint : Node2D
         Transform2D inverse = Transform.Inverse();
         DrawSetTransformMatrix(inverse);
 
-        bool debug = true;
+        bool debug = false;
         if(debug)
         {           
 
@@ -155,7 +163,7 @@ public class SpringPoint : Node2D
 
         } else
         {
-            DrawCircle(Position, 3f, Colors.DarkGray);
+            //DrawCircle(Position, 3f, Colors.DarkGray);
 
         }
 

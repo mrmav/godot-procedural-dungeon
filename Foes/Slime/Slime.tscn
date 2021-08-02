@@ -79,16 +79,16 @@ one_shot = true
 [node name="WalkingDurationTimer" type="Timer" parent="."]
 
 [node name="DamageComponent" parent="." instance=ExtResource( 3 )]
-Group = "foe"
-GroupsToDamage = PoolStringArray( "hero" )
-Knockback = 200
 AmountOfDamage = 2
+Group = "foe"
+GroupsToDamage = [ "hero" ]
+Knockback = 200
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]
 shape = SubResource( 7 )
 
 [node name="HealthComponent" parent="." instance=ExtResource( 4 )]
-Health = 5
+Health = 1000000
 
 [node name="KnockbackComponent" parent="." instance=ExtResource( 5 )]
 

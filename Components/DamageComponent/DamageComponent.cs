@@ -1,7 +1,6 @@
 using Godot;
 using System.Collections.Generic;
 
-[Tool]
 public class DamageComponent : Area2D
 {
     [Signal]

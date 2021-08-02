@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SpringSystem : Node2D
 {
-    private List<SpringPoint> _springs = new List<SpringPoint>();
+    protected List<SpringPoint> _springs = new List<SpringPoint>();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -16,6 +16,7 @@ public class SpringSystem : Node2D
             {
                 _springs.Add((SpringPoint)children[i]);
             }
+
         }
 
     }
@@ -24,7 +25,7 @@ public class SpringSystem : Node2D
     {
         for(int i = 0; i < _springs.Count; i++)
         {
-            _springs[i].AddForce(force);
+            _springs[i].AddForce(force, true);
         }
     }
 

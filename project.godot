@@ -18,6 +18,10 @@ config/name="godot-procedural-dungeon"
 run/main_scene="res://Player/Player.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+settings/stdout/print_fps=true
+
 [display]
 
 window/size/width=254
