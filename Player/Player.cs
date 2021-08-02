@@ -199,9 +199,9 @@ public class Player : BaseMob
 
 
         _velocity = MoveAndSlide(_velocity);
-        float clothingInfluence = 0.3f;
+        float clothingInfluence = 0.4f;
         Vector2 clothingForce = new Vector2(_velocity.x * clothingInfluence * -1 * _hoodie.Scale.x, _velocity.y * clothingInfluence * -1);
-        AddClothForce(clothingForce);        
+        AddClothForce(clothingForce);
 
         base._PhysicsProcess(delta);
 
@@ -209,8 +209,8 @@ public class Player : BaseMob
 
     public void AddClothForce(Vector2 force)
     {
-        _hoodie.AddForce(force);        
-        _cape.AddForce(force);
+        _hoodie.AddForce(force, true, 0.4f);        
+        _cape.AddForce(force, true, 0.8f);
     }
 
     public override void _Input(InputEvent @event)

@@ -26,9 +26,9 @@ public class SpringPoint : Node2D
 
     [Export]
     public List<NodePath> Connections;
-    
+
     private float[] _originalDistances;
-    private List<SpringPoint> _connections = new List<SpringPoint>();
+    public List<SpringPoint> SpringConnections = new List<SpringPoint>();
     
     private Vector2 _originalPosition = Vector2.Zero;
     private Vector2 _velocity = Vector2.Zero;
@@ -43,10 +43,13 @@ public class SpringPoint : Node2D
 
         for(int i = 0; i < Connections.Count; i++)
         {   
-            _connections.Add(GetNode<SpringPoint>(Connections[i]));
-            _originalDistances[i]= Position.DistanceTo(_connections[i].Position);
+            SpringConnections.Add(GetNode<SpringPoint>(Connections[i]));
+            _originalDistances[i]= Position.DistanceTo(SpringConnections[i].Position);
 
         }
+
+        ZIndex = 99;
+
     }
 
     public override void _PhysicsProcess(float delta)
@@ -59,9 +62,9 @@ public class SpringPoint : Node2D
             {
             
                 Vector2 springForces = Vector2.Zero;
-                for(int i = 0; i < _connections.Count; i++)
+                for(int i = 0; i < SpringConnections.Count; i++)
                 {
-                    springForces += GetSpringForce(this, _connections[i], _originalDistances[i], Springness);
+                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i], Springness);
 
                 }
 
@@ -91,24 +94,7 @@ public class SpringPoint : Node2D
 
     }
 
-    // public override void _Input(InputEvent @event)
-    // {
-
-    //     if(@event.IsActionPressed("player_attack"))
-    //     {
-
-    //         Vector2 mouse = GetGlobalMousePosition();
-    //         Vector2 dir = GlobalPosition - mouse;
-            
-
-    //         AddForce(dir.Normalized() * 400f);
-    //     }
-
-
-    //     base._Input(@event);
-    // }
-
-    public void AddForce(Vector2 force, bool random)
+    public void AddForce(Vector2 force, bool random, float scale = 0.1f)
     {
         if(IsPinned)
             return;
@@ -116,8 +102,8 @@ public class SpringPoint : Node2D
         Vector2 rand = Vector2.Zero;
         if(random)
         {
-            float scale = force.Length() / 10f;
-            float r = (float)(GD.RandRange(-2f * scale, 2f * scale));
+            float s = force.Length() * scale;
+            float r = (float)(GD.RandRange(-1f * s, 1f * s));
             rand = new Vector2(r, r);
         }
 
@@ -135,52 +121,6 @@ public class SpringPoint : Node2D
 
         return result;
     }
-
-    public override void _Draw()
-    {
-        Transform2D inverse = Transform.Inverse();
-        DrawSetTransformMatrix(inverse);
-
-        bool debug = false;
-        if(debug)
-        {           
-
-            DrawCircle(Position, .5f, Colors.Green);
-
-            for(int i = 0; i < _connections.Count; i++)
-            {            
-                DrawLine(Position, _connections[i].Position, Colors.OrangeRed, .5f, false);
-            }
-
-            if(UseLimits)
-            {
-                Rect2 r = new Rect2(GetLimitBegin(), PositionLimits.Size);
-                DrawRect(r, Colors.RoyalBlue, false, 1f, true);
-            }
-
-            DrawLine(Position, Position+_velocity, Colors.Purple, 1f, false);
-
-
-        } else
-        {
-            //DrawCircle(Position, 3f, Colors.DarkGray);
-
-        }
-
-        base._Draw();
-    }
-
-    // private Vector2 ClampPosition()
-    // {
-
-    //     Vector2 b = GetLimitBegin();
-    //     Vector2 e = getLimitEnd();
-
-    //     float x = Mathf.Clamp(Position.x, b.x, e.x);
-    //     float y = Mathf.Clamp(Position.y, b.y, e.y);
-
-    //     return new Vector2(x, y);
-    // }
 
     private Vector2 ClampPosition()
     {
@@ -241,47 +181,7 @@ public class SpringPoint : Node2D
         return force;
     }
 
-    // public void AddLimitingForces()
-    // {
-    //     Vector2 b = GetLimitBegin();
-    //     Vector2 e = getLimitEnd();
-
-    //     Vector2 force = Vector2.Zero;
-
-    //     if(Position.x < b.x)
-    //         force.x += b.x - Position.x;
-        
-    //     if(Position.x > e.x)
-    //         force.x += e.x - Position.x;
-
-    //     if(Position.y < b.y)
-    //         force.y += b.y - Position.y;
-        
-    //     if(Position.y > e.y)
-    //         force.y += e.y - Position.y;
-
-    //     AddForce(force * 100);
-    // }
-
-    public void LimitVelocity()
-    {
-        Vector2 b = GetLimitBegin();
-        Vector2 e = getLimitEnd();
-
-        if(Position.x < b.x)
-            _velocity.x = 0;
-        
-        if(Position.x > e.x)
-            _velocity.x = 0;
-
-        if(Position.y < b.y)
-            _velocity.y = 0;
-        
-        if(Position.y > e.y)
-            _velocity.y = 0;
-    }
-
-    private Vector2 GetLimitBegin()
+    public Vector2 GetLimitBegin()
     {
         float min_x = _originalPosition.x - PositionLimits.Position.x - PositionLimits.Size.x / 2f;
         float min_y = _originalPosition.y - PositionLimits.Position.y - PositionLimits.Size.y / 2f;
@@ -289,7 +189,7 @@ public class SpringPoint : Node2D
         return new Vector2(min_x, min_y);
     }
 
-    private Vector2 getLimitEnd()
+    public Vector2 getLimitEnd()
     {
         float max_x = _originalPosition.x + PositionLimits.Position.x + PositionLimits.Size.x / 2f;
         float max_y = _originalPosition.y + PositionLimits.Position.y + PositionLimits.Size.y / 2f;
@@ -306,6 +206,11 @@ public class SpringPoint : Node2D
     public Vector2 GetBasePosition()
     {
         return _originalPosition;
+    }
+
+    public Vector2 GetVelocity()
+    {
+        return _velocity;
     }
 
 

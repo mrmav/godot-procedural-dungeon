@@ -14,7 +14,7 @@
 [ext_resource path="res://Sfx/Creature_action_attack_gore_01.wav" type="AudioStream" id=12]
 [ext_resource path="res://Player/SpringSystem.cs" type="Script" id=13]
 [ext_resource path="res://Player/SpringPoint.cs" type="Script" id=14]
-[ext_resource path="res://Player/Cape.cs" type="Script" id=15]
+[ext_resource path="res://Player/Cape.tscn" type="PackedScene" id=15]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -86,83 +86,7 @@ collision_layer = 2
 script = ExtResource( 3 )
 Speed = 100.0
 
-[node name="Cape" type="Node2D" parent="."]
-position = Vector2( 0, -14 )
-script = ExtResource( 15 )
-
-[node name="SpringPointFixed1" type="Node2D" parent="Cape"]
-position = Vector2( -5, 0 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 9.8 )
-IsPinned = true
-Connections = [  ]
-
-[node name="SpringPointFixed2" type="Node2D" parent="Cape"]
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 9.8 )
-IsPinned = true
-Connections = [  ]
-
-[node name="SpringPointFixed3" type="Node2D" parent="Cape"]
-position = Vector2( 5, 0 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 9.8 )
-IsPinned = true
-Connections = [  ]
-
-[node name="SpringPoint1_1" type="Node2D" parent="Cape"]
-position = Vector2( -5, 6 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 6 )
-Springness = 8.0
-Mass = 2.0
-Connections = [ NodePath("../SpringPointFixed1"), NodePath("../SpringPoint1_2") ]
-
-[node name="SpringPoint1_2" type="Node2D" parent="Cape"]
-position = Vector2( 0, 6 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 6 )
-Springness = 8.0
-Mass = 2.0
-Connections = [ NodePath("../SpringPointFixed2"), NodePath("../SpringPoint1_1"), NodePath("../SpringPoint1_3") ]
-
-[node name="SpringPoint1_3" type="Node2D" parent="Cape"]
-position = Vector2( 5, 6 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 6 )
-Springness = 8.0
-Mass = 2.0
-Connections = [ NodePath("../SpringPointFixed3"), NodePath("../SpringPoint1_2") ]
-
-[node name="SpringPoint2_1" type="Node2D" parent="Cape"]
-position = Vector2( -5, 13 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 6 )
-Springness = 8.0
-Mass = 2.0
-Connections = [ NodePath("../SpringPoint1_1"), NodePath("../SpringPoint2_2") ]
-
-[node name="SpringPoint2_2" type="Node2D" parent="Cape"]
-position = Vector2( 0, 13 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 6 )
-Springness = 8.0
-Mass = 2.0
-Connections = [ NodePath("../SpringPoint2_1"), NodePath("../SpringPoint1_2"), NodePath("../SpringPoint2_3") ]
-
-[node name="SpringPoint2_3" type="Node2D" parent="Cape"]
-position = Vector2( 5, 13 )
-script = ExtResource( 14 )
-Gravity = Vector2( 0, 6 )
-Springness = 8.0
-Mass = 2.0
-Connections = [ NodePath("../SpringPoint2_2"), NodePath("../SpringPoint1_3") ]
-
-[node name="CapePolygon" type="Polygon2D" parent="Cape"]
-visible = false
-color = Color( 0.364706, 0.117647, 0.117647, 1 )
-
-[node name="CapeMeshInstance" type="MeshInstance2D" parent="Cape"]
+[node name="Cape" parent="." instance=ExtResource( 15 )]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 12 )
@@ -200,10 +124,14 @@ rotation = -1.309
 position = Vector2( 2, 1 )
 scale = Vector2( 0.546737, 0.546737 )
 
+[node name="DamageComponent" parent="WeaponHandle/SimpleSword" index="2"]
+visible = false
+
 [node name="HitstopComponent" parent="WeaponHandle/SimpleSword" index="5"]
 FreezeFrames = 4
 
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
+visible = false
 position = Vector2( 0, -11 )
 Group = "hero"
 GroupsToDamage = [  ]
@@ -241,7 +169,6 @@ pause_mode = 2
 stream = ExtResource( 12 )
 
 [node name="Hoodie" type="Node2D" parent="."]
-visible = false
 position = Vector2( 0, -17 )
 script = ExtResource( 13 )
 
@@ -272,11 +199,5 @@ Mass = 1.0
 UseLimits = true
 PositionLimits = Rect2( 0, 0, 10, 10 )
 Connections = [ NodePath("../SpringPoint3") ]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-zoom = Vector2( 0.5, 0.5 )
-smoothing_enabled = true
-smoothing_speed = 4.0
 
 [editable path="WeaponHandle/SimpleSword"]

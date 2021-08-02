@@ -4,31 +4,19 @@ using System.Collections.Generic;
 
 public class Cape : SpringSystem
 {
-    private Polygon2D _polygon;
     private MeshInstance2D _meshInstance;
     private ArrayMesh _mesh;
     private MeshDataTool _mdt;    
-
-    private Vector2 _center = Vector2.Zero;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         base._Ready();
 
-        Array children = GetChildren();
-        for(int i = 0; i < children.Count; i++)
-        {
-            if(children[i] is Polygon2D)
-            {
-                _polygon = (Polygon2D)children[i];
-            }    
-        }
-
         _mdt = new MeshDataTool();
-
         _meshInstance = GetNode<MeshInstance2D>("CapeMeshInstance");
         _mesh = new ArrayMesh();
+
         Array arr = new Array();
         arr.Resize((int)Mesh.ArrayType.Max);
 
@@ -91,23 +79,6 @@ public class Cape : SpringSystem
         _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arr);
         _meshInstance.Mesh = _mesh;
 
-        //UpdatePoints();
-
-    }
-
-    public void UpdatePoints()
-    {
-        List<Vector2> pts = new List<Vector2>();
-        for(int i = 0; i < _springs.Count - 1; i++)  // we do not want the last two spring pointsfor a closed polygon
-        {
-            pts.Add(_springs[i].Position);
-        }
-
-        // sort the points in clockwise order
-        _center = CalculateCenterPoint(pts);
-        pts.Sort(ComparePoints);
-
-        _polygon.Polygon = pts.ToArray();
     }
 
     public void UpdateMesh()
@@ -125,16 +96,15 @@ public class Cape : SpringSystem
 
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        //UpdatePoints();
         UpdateMesh();
-        Update();
+
+        base._Process(delta);
     }
     
     // see: https://stackoverflow.com/questions/6989100/sort-points-in-clockwise-order
-    private int ComparePoints(Vector2 a, Vector2 b)
+    private int ComparePoints(Vector2 a, Vector2 b, Vector2 _center)
     {
 
         if (a.x - _center.x >= 0 && b.x - _center.x < 0)
@@ -173,14 +143,6 @@ public class Cape : SpringSystem
 
         return c / pts.Count;
 
-    }
-
-    public override void _Draw()
-    {
-
-        DrawCircle(_center, 1f, Colors.White);
-
-        base._Draw();
     }
 
     private int Bool2Int(bool b)

@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Player/SpringPoint.cs" type="Script" id=1]
+[ext_resource path="res://Player/Cape.cs" type="Script" id=2]
+
+[node name="Cape" type="Node2D"]
+position = Vector2( 0, -14 )
+script = ExtResource( 2 )
+
+[node name="SpringPointFixed1" type="Node2D" parent="."]
+position = Vector2( -5, 0 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 9.8 )
+IsPinned = true
+Connections = [  ]
+
+[node name="SpringPointFixed2" type="Node2D" parent="."]
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 9.8 )
+IsPinned = true
+Connections = [  ]
+
+[node name="SpringPointFixed3" type="Node2D" parent="."]
+position = Vector2( 5, 0 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 9.8 )
+IsPinned = true
+Connections = [  ]
+
+[node name="SpringPoint1_1" type="Node2D" parent="."]
+position = Vector2( -5, 4 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPointFixed1"), NodePath("../SpringPoint1_2") ]
+
+[node name="SpringPoint1_2" type="Node2D" parent="."]
+position = Vector2( 0, 4 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPointFixed2"), NodePath("../SpringPoint1_1"), NodePath("../SpringPoint1_3") ]
+
+[node name="SpringPoint1_3" type="Node2D" parent="."]
+position = Vector2( 5, 4 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPointFixed3"), NodePath("../SpringPoint1_2") ]
+
+[node name="SpringPoint2_1" type="Node2D" parent="."]
+position = Vector2( -5, 8 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPoint1_1"), NodePath("../SpringPoint2_2") ]
+
+[node name="SpringPoint2_2" type="Node2D" parent="."]
+position = Vector2( 0, 8 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPoint2_1"), NodePath("../SpringPoint1_2"), NodePath("../SpringPoint2_3") ]
+
+[node name="SpringPoint2_3" type="Node2D" parent="."]
+position = Vector2( 5, 8 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPoint2_2"), NodePath("../SpringPoint1_3") ]
+
+[node name="SpringPoint3_1" type="Node2D" parent="."]
+position = Vector2( -5, 13 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPoint1_1"), NodePath("../SpringPoint2_2") ]
+
+[node name="SpringPoint3_2" type="Node2D" parent="."]
+position = Vector2( 0, 13 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPoint2_1"), NodePath("../SpringPoint1_2"), NodePath("../SpringPoint2_3") ]
+
+[node name="SpringPoint3_3" type="Node2D" parent="."]
+position = Vector2( 5, 13 )
+script = ExtResource( 1 )
+Gravity = Vector2( 0, 6 )
+Springness = 8.0
+Mass = 2.0
+Connections = [ NodePath("../SpringPoint2_2"), NodePath("../SpringPoint1_3") ]
+
+[node name="CapeMeshInstance" type="MeshInstance2D" parent="."]
