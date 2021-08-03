@@ -4,24 +4,49 @@ using System.Collections.Generic;
 
 public class Cape : SpringSystem
 {
+    [Export]
+    public NodePath NodeToFollow;
+    
+    [Export]
+    public List<NodePath> SpringsToFollow;
+
     private MeshInstance2D _meshInstance;
     private ArrayMesh _mesh;
-    private MeshDataTool _mdt;    
+    private MeshDataTool _mdt;
+
+    private Node2D _node2Follow;
+    private Vector2[] _offset;
+    private SpringPoint[] _springs2Follow;
+
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         base._Ready();
 
+        if(NodeToFollow != null)
+        {
+            _node2Follow = GetNode<Node2D>(NodeToFollow);
+        }
+
+        _springs2Follow = new SpringPoint[SpringsToFollow.Count];
+        _offset = new Vector2[SpringsToFollow.Count];
+        for(int i = 0; i < SpringsToFollow.Count; i++)
+        {
+            _springs2Follow[i] = GetNode<SpringPoint>(SpringsToFollow[i]);
+            _offset[i] = _springs2Follow[i].GlobalPosition - _node2Follow.GlobalPosition;
+            GD.Print(_offset[i]);
+        }
+
         _mdt = new MeshDataTool();
-        _meshInstance = GetNode<MeshInstance2D>("CapeMeshInstance");
+        _meshInstance = GetNode<MeshInstance2D>("Viewport/CapeMeshInstance");
         _mesh = new ArrayMesh();
 
         Array arr = new Array();
         arr.Resize((int)Mesh.ArrayType.Max);
 
-        Vector3[] vertices = new Vector3[_springs.Count];        
-        Color[] colors = new Color[_springs.Count];        
+        Vector3[] vertices = new Vector3[_springs.Count];
+        Color[] colors = new Color[_springs.Count];
 
         for(int i = 0; i < _springs.Count; i++)
         {
@@ -31,13 +56,13 @@ public class Cape : SpringSystem
             colors[i] = Colors.DarkRed;
         }
 
-        int[] indices = new int[24];
+        int[] indices = new int[48];
 
         // create indices
         int currentIndice = 0;
         int currentSubDivison = 0;
-        int ZSubs = 2;
         int XSubs = 2;
+        int ZSubs = 4;
         int nVerticesWidth = 3;
         for (int z = 0; z < ZSubs; z++)
         {
@@ -86,9 +111,11 @@ public class Cape : SpringSystem
         _mdt.CreateFromSurface(_mesh, 0);
 
         int count = _mdt.GetVertexCount();
+        Vector2 transform = TransformTo(_springs[0].GlobalPosition, new Vector2(0, 0));        
         for(int i = 0; i < count; i++)
-        {            
-            _mdt.SetVertex(i, new Vector3(_springs[i].Position.x, _springs[i].Position.y, 0f));
+        {   
+            Vector2 newPosition = _springs[i].GlobalPosition + transform;
+            _mdt.SetVertex(i, new Vector3(newPosition.x, newPosition.y, 0f));
         }
 
         _mesh.SurfaceRemove(0);
@@ -96,8 +123,25 @@ public class Cape : SpringSystem
 
     }
 
+    public Vector2 TransformTo(Vector2 p1, Vector2 p2)
+    {
+        return p2 - p1;
+    }
+
     public override void _Process(float delta)
     {
+        if(_node2Follow != null)
+        {
+            //Position = _node2Follow.Position;
+
+            for(int i = 0; i < _springs2Follow.Length; i++)
+            {
+                _springs2Follow[i].GlobalPosition = _node2Follow.GlobalPosition + _offset[i];
+            }
+        }
+
+        //_meshInstance.GlobalPosition = new Vector2(64, 64);
+
         UpdateMesh();
 
         base._Process(delta);

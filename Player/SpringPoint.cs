@@ -10,7 +10,7 @@ public class SpringPoint : Node2D
     public Vector2 Gravity = Vector2.Zero;
 
     [Export]
-    public float Springness = 10;
+    public float Stifness = 10;
 
     [Export]
     public float Mass = 24f;
@@ -64,7 +64,7 @@ public class SpringPoint : Node2D
                 Vector2 springForces = Vector2.Zero;
                 for(int i = 0; i < SpringConnections.Count; i++)
                 {
-                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i], Springness);
+                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i], Stifness);
 
                 }
 

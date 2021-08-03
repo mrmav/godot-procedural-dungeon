@@ -12,9 +12,20 @@ public class Player : BaseMob
     [Export]
     float Speed = 1f;
     [Export]
+    float CapeClothingSpeedInfluence = 0.4f;
+    [Export]
+    float HoodieClothingSpeedInfluence = 0.4f;
+    [Export]
+    float CapeInfluenceRandom = 0.2f;
+    [Export]
+    float HoodieInfluenceRandom = 0.1f;
+    [Export]
     float ControllerDeadzone = 0.2f;
     [Export]
     float CameraExtendZone = 4f;
+    [Export]
+    public NodePath CapeNode;
+
 
     private Vector2 _velocity = Vector2.Zero;
     private AnimatedSprite _animation;
@@ -29,6 +40,7 @@ public class Player : BaseMob
     private HitstopComponent _hitstop;
     private SpringSystem _hoodie;
     private SpringSystem _cape;
+    private Sprite _capeSprite;
 
     private AudioStreamPlayer _hitsfx;
 
@@ -61,7 +73,10 @@ public class Player : BaseMob
         _flash = GetNode<FlashComponent>("FlashComponent");
         _hitstop = GetNode<HitstopComponent>("HitstopComponent");
         _hoodie = GetNode<SpringSystem>("Hoodie");
-        _cape   = GetNode<SpringSystem>("Cape");
+        _cape   = GetNode<SpringSystem>(CapeNode);
+        _capeSprite = GetNode<Sprite>("CapeSprite");
+
+        _capeSprite.Texture = _cape.GetNode<Viewport>("Viewport").GetTexture();
 
         _hitsfx = GetNode<AudioStreamPlayer>("HitSfx");
 
@@ -153,6 +168,11 @@ public class Player : BaseMob
             bool success = _dash.Dash(_lastDirection);            
         }
 
+        if(Input.IsActionJustPressed("reset"))
+        {
+            GetTree().ChangeScene(GetTree().CurrentScene.Filename);       
+        }
+
         if(!_invulnerability.IsVulnerable)
         {
             uint time = OS.GetTicksMsec();
@@ -199,18 +219,20 @@ public class Player : BaseMob
 
 
         _velocity = MoveAndSlide(_velocity);
-        float clothingInfluence = 0.4f;
-        Vector2 clothingForce = new Vector2(_velocity.x * clothingInfluence * -1 * _hoodie.Scale.x, _velocity.y * clothingInfluence * -1);
-        AddClothForce(clothingForce);
+
+        AddClothForce();
 
         base._PhysicsProcess(delta);
 
     }
 
-    public void AddClothForce(Vector2 force)
+    public void AddClothForce()
     {
-        _hoodie.AddForce(force, true, 0.4f);        
-        _cape.AddForce(force, true, 0.8f);
+        Vector2 capeClothingForce   = _velocity * -CapeClothingSpeedInfluence;
+        Vector2 hoodieClothingForce = _velocity * -HoodieClothingSpeedInfluence;
+
+        _cape.AddForce(capeClothingForce, true, CapeInfluenceRandom);
+        _hoodie.AddForce(hoodieClothingForce, true, HoodieInfluenceRandom);        
     }
 
     public override void _Input(InputEvent @event)
