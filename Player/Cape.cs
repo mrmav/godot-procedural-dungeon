@@ -138,6 +138,12 @@ public class Cape : SpringSystem
             {
                 _springs2Follow[i].GlobalPosition = _node2Follow.GlobalPosition + _offset[i];
             }
+
+            for(int i = 0; i < _springs.Count; i++)
+            {
+                _springs[i].SetBasePosition(_springs[0].Position + _springs[i].GetOriginalPosition());
+            }
+
         }
 
         //_meshInstance.GlobalPosition = new Vector2(64, 64);

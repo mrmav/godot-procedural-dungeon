@@ -46,10 +46,8 @@ NodeToFollow = NodePath("../Player")
 
 [node name="Player" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 304, 191 )
-CapeClothingSpeedInfluence = 0.01
-HoodieClothingSpeedInfluence = 0.1
-CapeInfluenceRandom = 0.005
-HoodieInfluenceRandom = 0.1
+CapeClothingSpeedInfluence = 0.02
+CapeInfluenceRandom = 20.0
 ControllerDeadzone = 0.4
 CameraExtendZone = 16.0
 CapeNode = NodePath("../Cape")

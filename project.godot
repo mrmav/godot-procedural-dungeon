@@ -15,7 +15,7 @@ _global_script_class_icons={
 [application]
 
 config/name="godot-procedural-dungeon"
-run/main_scene="res://Player/Player.tscn"
+run/main_scene="res://Player/PlayerTest.tscn"
 config/icon="res://icon.png"
 
 [debug]

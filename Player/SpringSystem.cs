@@ -43,7 +43,7 @@ public class SpringSystem : Node2D
     {
         for(int i = 0; i < _springs.Count; i++)
         {
-            Vector2 pos = _springs[i].GetBasePosition();
+            Vector2 pos = _springs[i].GetOriginalPosition();
             
             pos.x = Mathf.Abs(pos.x) * side;
 

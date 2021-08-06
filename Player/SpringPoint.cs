@@ -16,6 +16,18 @@ public class SpringPoint : Node2D
     public float Mass = 24f;
 
     [Export]
+    public float SpringStrength = 0.5f;
+
+    [Export]
+    public float OriginalDistanceMult = 0.5f;
+
+    [Export]
+    public float LinearRestitutionDampening = 0.001f;
+
+    [Export]
+    public float MaxVelocity = 400f;
+
+    [Export]
     public bool IsPinned = false;
 
     [Export]
@@ -31,6 +43,7 @@ public class SpringPoint : Node2D
     public List<SpringPoint> SpringConnections = new List<SpringPoint>();
     
     private Vector2 _originalPosition = Vector2.Zero;
+    private Vector2 _basePosition = Vector2.Zero;
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _acceleration = Vector2.Zero;
     
@@ -38,17 +51,16 @@ public class SpringPoint : Node2D
     {
 
         _originalPosition = Position;
+        _basePosition = Position;
 
         _originalDistances = new float[Connections.Count];
 
         for(int i = 0; i < Connections.Count; i++)
         {   
             SpringConnections.Add(GetNode<SpringPoint>(Connections[i]));
-            _originalDistances[i]= Position.DistanceTo(SpringConnections[i].Position);
+            _originalDistances[i] = Position.DistanceTo(SpringConnections[i].Position);
 
         }
-
-        ZIndex = 99;
 
     }
 
@@ -64,14 +76,22 @@ public class SpringPoint : Node2D
                 Vector2 springForces = Vector2.Zero;
                 for(int i = 0; i < SpringConnections.Count; i++)
                 {
-                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i], Stifness);
-
+                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i] * OriginalDistanceMult, Stifness) * SpringStrength;
                 }
 
                 AddForce(Gravity, false);
                 AddForce(springForces, false);
+                AddForce(GetLinearRestitution(LinearRestitutionDampening) * (1f / delta), false);                
 
                 _velocity += _acceleration;
+                _velocity *= Dampening;
+
+                _acceleration = Vector2.Zero;
+                
+                if(_velocity.Length() > MaxVelocity)
+                {
+                    _velocity = _velocity.Normalized() * MaxVelocity;
+                }
             
                 if(UseLimits)
                 {
@@ -84,8 +104,6 @@ public class SpringPoint : Node2D
                     Position += _velocity * delta;
                 }
 
-                _velocity *= Dampening;
-                _acceleration = Vector2.Zero;
             }
 
             Update();
@@ -120,6 +138,13 @@ public class SpringPoint : Node2D
         result = dir.Normalized() * strength;
 
         return result;
+    }
+
+    public Vector2 GetLinearRestitution(float damp)
+    {
+
+        return (_basePosition - Position) * damp;
+        
     }
 
     private Vector2 ClampPosition()
@@ -203,7 +228,7 @@ public class SpringPoint : Node2D
         _originalPosition = pos;
     }
 
-    public Vector2 GetBasePosition()
+    public Vector2 GetOriginalPosition()
     {
         return _originalPosition;
     }
@@ -211,6 +236,11 @@ public class SpringPoint : Node2D
     public Vector2 GetVelocity()
     {
         return _velocity;
+    }
+
+    public void SetBasePosition(Vector2 pos)
+    {
+        _basePosition = pos;
     }
 
 
