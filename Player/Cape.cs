@@ -48,13 +48,22 @@ public class Cape : SpringSystem
         Vector3[] vertices = new Vector3[_springs.Count];
         Color[] colors = new Color[_springs.Count];
 
+        Vector2[] vertices2D = new Vector2[_springs.Count];
+
+
         for(int i = 0; i < _springs.Count; i++)
         {
             Vector2 s = _springs[i].Position;
             vertices[i] = new Vector3(s.x, s.y, 0f);
+            vertices2D[i] = new Vector2(s.x, s.y);
 
-            colors[i] = Colors.DarkRed;
+            colors[i] = Colors.White;
         }
+
+
+        int[] engineIndices = Geometry.TriangulateDelaunay2d(vertices2D);
+        GD.Print(engineIndices);
+        GD.Print(engineIndices.Length);
 
         int[] indices = new int[48];
 
@@ -99,7 +108,8 @@ public class Cape : SpringSystem
 
         arr[(int)Mesh.ArrayType.Vertex] = vertices;
         arr[(int)Mesh.ArrayType.Color] = colors;
-        arr[(int)Mesh.ArrayType.Index]  = indices;
+        //arr[(int)Mesh.ArrayType.Index]  = indices;
+        arr[(int)Mesh.ArrayType.Index]  = engineIndices;
         
         _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arr);
         _meshInstance.Mesh = _mesh;

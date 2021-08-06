@@ -91,6 +91,7 @@ material = ExtResource( 15 )
 position = Vector2( 0, -15 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+visible = false
 frames = SubResource( 12 )
 animation = "idle"
 offset = Vector2( 0, -10 )
