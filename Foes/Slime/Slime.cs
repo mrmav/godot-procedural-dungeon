@@ -198,7 +198,6 @@ public class Slime : KinematicBody2D
 
     private void OnDeath(int health)
     {
-        GD.Print($"{Name} should have died already.");
         QueueFree();
     }
 

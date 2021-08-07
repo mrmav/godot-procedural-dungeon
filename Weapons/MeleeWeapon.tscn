@@ -8,7 +8,7 @@
 [ext_resource path="res://Components/HitstopComponent/HitstopComponent.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 14.0357
+radius = 21.0
 
 [sub_resource type="Animation" id=2]
 resource_name = "swing"
@@ -21,7 +21,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.15, 0.2, 0.25 ),
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ -74.9999, -135.0, 0.0, 30.0, -75.0 ]
@@ -33,10 +33,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( -3, -5 ), Vector2( -7, -5 ), Vector2( 1.37673, 1.37673 ), Vector2( 0, 6 ), Vector2( 0, 0 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( -7, -5 ), Vector2( 1.37673, 1.37673 ), Vector2( 0, 6 ), Vector2( 0, 0 ) ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("DamageComponent:DoDamage")
@@ -45,7 +45,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0.1, 0.15, 0.2 ),
+"times": PoolRealArray( 0.05, 0.1, 0.15 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, false ]
@@ -57,7 +57,7 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.15, 0.25 ),
+"times": PoolRealArray( 0, 0.1, 0.2 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, false ]
@@ -69,7 +69,7 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0.1, 0.15, 0.2 ),
+"times": PoolRealArray( 0.05, 0.1, 0.15 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ false, true, false ]
@@ -77,23 +77,23 @@ tracks/4/keys = {
 
 [node name="Weapon" type="Node2D"]
 script = ExtResource( 3 )
-CanCancel = true
 SwingAudioPlayer = NodePath("Swingsfx")
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 0, 6 )
-rotation = 0.523599
+rotation = -1.309
 scale = Vector2( 0.533778, 0.533778 )
 texture = ExtResource( 1 )
 offset = Vector2( 7.49375, 0 )
 
 [node name="DashEffect" type="Sprite" parent="."]
 visible = false
-position = Vector2( 0, 1 )
-scale = Vector2( 0.641667, 0.641667 )
+position = Vector2( 1, 1 )
+rotation = -0.00534904
+scale = Vector2( 0.831148, 0.831148 )
 texture = ExtResource( 4 )
 
 [node name="DamageComponent" parent="." instance=ExtResource( 2 )]
+visible = false
 position = Vector2( 1, 1 )
 Group = "weapon"
 GroupsToDamage = [ "foe" ]

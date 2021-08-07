@@ -10,7 +10,7 @@ public class SpringPoint : Node2D
     public Vector2 Gravity = Vector2.Zero;
 
     [Export]
-    public float Stifness = 10;
+    public float Stiffness = 10;
 
     [Export]
     public float Mass = 24f;
@@ -46,12 +46,14 @@ public class SpringPoint : Node2D
     private Vector2 _basePosition = Vector2.Zero;
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _acceleration = Vector2.Zero;
+    private float _originalMaxVelocity;
     
     public override void _Ready()
     {
 
         _originalPosition = Position;
         _basePosition = Position;
+        _originalMaxVelocity = MaxVelocity;
 
         _originalDistances = new float[Connections.Count];
 
@@ -76,7 +78,7 @@ public class SpringPoint : Node2D
                 Vector2 springForces = Vector2.Zero;
                 for(int i = 0; i < SpringConnections.Count; i++)
                 {
-                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i] * OriginalDistanceMult, Stifness) * SpringStrength;
+                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i] * OriginalDistanceMult, Stiffness) * SpringStrength;
                 }
 
                 AddForce(Gravity, false);
@@ -106,7 +108,7 @@ public class SpringPoint : Node2D
 
             }
 
-            Update();
+            //Update();
 
         }
 
@@ -223,10 +225,10 @@ public class SpringPoint : Node2D
 
     }
 
-    public void RefreshBasePosition(Vector2 pos)
-    {
-        _originalPosition = pos;
-    }
+    // public void RefreshBasePosition(Vector2 pos)
+    // {
+    //     _originalPosition = pos;
+    // }
 
     public Vector2 GetOriginalPosition()
     {
@@ -241,6 +243,11 @@ public class SpringPoint : Node2D
     public void SetBasePosition(Vector2 pos)
     {
         _basePosition = pos;
+    }
+
+    public float GetOriginalMaxVelocity()
+    {
+        return _originalMaxVelocity;
     }
 
 

@@ -84,7 +84,7 @@ one_shot = true
 visible = false
 AmountOfDamage = 2
 Group = "foe"
-GroupsToDamage = null
+GroupsToDamage = [ "hero" ]
 Knockback = 200
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent"]

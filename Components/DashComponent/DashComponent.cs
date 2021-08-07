@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class DashComponent : Node
 {
+
+    [Signal]
+    public delegate void DashStop();
+
     [Export]
     public int Speed = 450;
 
@@ -73,6 +77,8 @@ public class DashComponent : Node
             
             // init cooldown
             _timer.Start(Cooldown);
+
+            EmitSignal(nameof(DashStop));
         }
 
     }

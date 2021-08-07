@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://TileLevel/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://CameraFocusPoint/CameraFocusPoint.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Art/crosshair.png" type="Texture" id=5]
 [ext_resource path="res://Player/Cursor.cs" type="Script" id=6]
-[ext_resource path="res://Player/Cape.tscn" type="PackedScene" id=7]
 
 [node name="World" type="Node2D"]
 
@@ -40,17 +39,12 @@ position = Vector2( 337, 85 )
 [node name="Slime8" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 409, 253 )
 
-[node name="Cape" parent="YSort" instance=ExtResource( 7 )]
-position = Vector2( 304, 176 )
-NodeToFollow = NodePath("../Player")
-
 [node name="Player" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( 304, 191 )
 CapeClothingSpeedInfluence = 0.02
 CapeInfluenceRandom = 20.0
 ControllerDeadzone = 0.4
 CameraExtendZone = 16.0
-CapeNode = NodePath("../Cape")
 
 [node name="Slime9" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 56, 45 )

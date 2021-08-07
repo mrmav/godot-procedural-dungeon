@@ -2,7 +2,7 @@ using Godot;
 using Godot.Collections;
 using System.Collections.Generic;
 
-public class SpringSystem : Node2D
+public class SpringSystem : Node
 {
 
     [Export]
@@ -26,8 +26,8 @@ public class SpringSystem : Node2D
 
     public override void _Process(float delta)
     {
-        if(ShowDebugGeometry)
-            Update();
+        // if(ShowDebugGeometry)
+        //     Update();
         
     }
 
@@ -47,44 +47,44 @@ public class SpringSystem : Node2D
             
             pos.x = Mathf.Abs(pos.x) * side;
 
-            _springs[i].RefreshBasePosition(pos);
+            _springs[i].SetBasePosition(pos);
         }
     }
 
-    public override void _Draw()
-    {
-        if(ShowDebugGeometry)
-        {
-            for(int i = 0; i < _springs.Count; i++)
-            {
-                Debug(_springs[i]);
-            }
-        }
+    // public override void _Draw()
+    // {
+    //     if(ShowDebugGeometry)
+    //     {
+    //         for(int i = 0; i < _springs.Count; i++)
+    //         {
+    //             Debug(_springs[i]);
+    //         }
+    //     }
 
-        base._Draw();
-    }
+    //     base._Draw();
+    // }
 
     
-    public void Debug(SpringPoint spring)
-    {
-        // Transform2D inverse = Transform.Inverse();
-        // DrawSetTransformMatrix(inverse);
+    // public void Debug(SpringPoint spring)
+    // {
+    //     // Transform2D inverse = Transform.Inverse();
+    //     // DrawSetTransformMatrix(inverse);
 
-        DrawCircle(spring.Position, .5f, Colors.Green);
+    //     DrawCircle(spring.Position, .5f, Colors.Green);
 
-        for(int i = 0; i < spring.SpringConnections.Count; i++)
-        {            
-            DrawLine(spring.Position, spring.SpringConnections[i].Position, Colors.OrangeRed, .5f, false);
-        }
+    //     for(int i = 0; i < spring.SpringConnections.Count; i++)
+    //     {            
+    //         DrawLine(spring.Position, spring.SpringConnections[i].Position, Colors.OrangeRed, .5f, false);
+    //     }
 
-        if(spring.UseLimits)
-        {
-            Rect2 r = new Rect2(spring.GetLimitBegin(), spring.PositionLimits.Size);
-            DrawRect(r, Colors.RoyalBlue, false, 1f, true);
-        }
+    //     if(spring.UseLimits)
+    //     {
+    //         Rect2 r = new Rect2(spring.GetLimitBegin(), spring.PositionLimits.Size);
+    //         DrawRect(r, Colors.RoyalBlue, false, 1f, true);
+    //     }
 
-        DrawLine(spring.Position, spring.Position + spring.GetVelocity(), Colors.Purple, 1f, false);
+    //     DrawLine(spring.Position, spring.Position + spring.GetVelocity(), Colors.Purple, 1f, false);
 
-    }
+    // }
 
 }

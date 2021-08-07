@@ -66,7 +66,6 @@ public class MeleeWeapon : Node2D
     private void OnAnimationFinish(string anim)
     {
         _isAttacking = false;
-        GD.Print("anim finished");
     }
 
     public void OnDamageDealt(Damage info)

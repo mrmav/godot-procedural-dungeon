@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Player/SpringPoint.cs" type="Script" id=1]
 [ext_resource path="res://Player/Cape.cs" type="Script" id=2]
+[ext_resource path="res://Player/CapeMaterial.tres" type="Material" id=3]
 
-[node name="Cape" type="Node2D"]
+[sub_resource type="ViewportTexture" id=1]
+viewport_path = NodePath("Viewport")
+
+[node name="Cape" type="Node"]
 script = ExtResource( 2 )
 SpringsToFollow = [ NodePath("SpringPointFixed1"), NodePath("SpringPointFixed2"), NodePath("SpringPointFixed3") ]
 
@@ -16,6 +20,12 @@ render_target_v_flip = true
 
 [node name="CapeMeshInstance" type="MeshInstance2D" parent="Viewport"]
 position = Vector2( 64, 64 )
+
+[node name="CapeSprite" type="Sprite" parent="."]
+material = ExtResource( 3 )
+position = Vector2( 0, -15 )
+z_index = 9
+texture = SubResource( 1 )
 
 [node name="SpringPointFixed2" type="Node2D" parent="."]
 script = ExtResource( 1 )
@@ -42,9 +52,7 @@ position = Vector2( -6, 4 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -55,9 +63,7 @@ position = Vector2( 0, 3 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -68,9 +74,7 @@ position = Vector2( 6, 4 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -81,9 +85,7 @@ position = Vector2( -6, 6 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -94,9 +96,7 @@ position = Vector2( 0, 5 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -107,9 +107,7 @@ position = Vector2( 6, 6 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -120,9 +118,7 @@ position = Vector2( -6, 8 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -133,9 +129,7 @@ position = Vector2( 0, 7 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -146,9 +140,7 @@ position = Vector2( 6, 8 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -159,9 +151,7 @@ position = Vector2( -6, 10 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -172,9 +162,7 @@ position = Vector2( 0, 10 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0
@@ -185,9 +173,7 @@ position = Vector2( 6, 10 )
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 8 )
-Stifness = 12.0
 Mass = 2.0
-SpringStrength = 1.0
 OriginalDistanceMult = 1.0
 LinearRestitutionDampening = 0.05
 MaxVelocity = 100.0

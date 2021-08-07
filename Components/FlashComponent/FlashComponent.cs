@@ -61,7 +61,6 @@ public class FlashComponent : Node
     private void Unflash()
     {
         SetFlash(false);
-        GD.Print($"{GetParent().Name} unflash");
     }
 
 }

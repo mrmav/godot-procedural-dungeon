@@ -10,120 +10,127 @@ public class Cape : SpringSystem
     [Export]
     public List<NodePath> SpringsToFollow;
 
+    [Export]
+    public NodePath Anchor;
+
+    // this mesh instance is the resulting cape mesh
     private MeshInstance2D _meshInstance;
+
+    // that actual cape mesh
     private ArrayMesh _mesh;
+
+    // mesh tool
     private MeshDataTool _mdt;
 
+    // this array holds the node that
+    // the cape will follow
     private Node2D _node2Follow;
-    private Vector2[] _offset;
+
+    // these are the springs that will follow the node
+    // (in this case, all the fixed springs)
     private SpringPoint[] _springs2Follow;
 
+    // the offsets of the springs that will follow the node
+    private Vector2[] _offset;
 
-    // Called when the node enters the scene tree for the first time.
+    // a position what will anchor all the spring points
+    private Position2D _anchor;
+    private Vector2 _anchorOffset;
+
+
+    // the sprite to show the cape texture
+    private Sprite _capeSprite;
+
     public override void _Ready()
     {
         base._Ready();
 
-        if(NodeToFollow != null)
-        {
-            _node2Follow = GetNode<Node2D>(NodeToFollow);
-        }
+        _node2Follow = GetNode<Node2D>(NodeToFollow);
 
+        // define an anchor for the cloth system
+        if(Anchor == null)
+        {
+            _anchor = new Position2D();
+            _anchor.Position = Vector2.Zero;
+            AddChild(_anchor);
+            
+        } else
+        {
+            _anchor = GetNode<Position2D>(Anchor);
+        }
+        _anchorOffset = _anchor.GlobalPosition - _node2Follow.GlobalPosition;
+
+        // init arrays 
         _springs2Follow = new SpringPoint[SpringsToFollow.Count];
         _offset = new Vector2[SpringsToFollow.Count];
+
+        // populate the arrays
         for(int i = 0; i < SpringsToFollow.Count; i++)
         {
             _springs2Follow[i] = GetNode<SpringPoint>(SpringsToFollow[i]);
-            _offset[i] = _springs2Follow[i].GlobalPosition - _node2Follow.GlobalPosition;
-            GD.Print(_offset[i]);
+            _offset[i] = _springs2Follow[i].GlobalPosition - _anchor.GlobalPosition;
         }
 
+        _capeSprite = GetNode<Sprite>("CapeSprite");
+
         _mdt = new MeshDataTool();
-        _meshInstance = GetNode<MeshInstance2D>("Viewport/CapeMeshInstance");
+        _meshInstance = GetNode<MeshInstance2D>("Viewport/CapeMeshInstance");  // the meshInstance is inside the viewport so we can use the texture later
         _mesh = new ArrayMesh();
 
-        Array arr = new Array();
-        arr.Resize((int)Mesh.ArrayType.Max);
+        // this is the 
+        Array meshArray = new Array();
+        // this resize will make the array able
+        // to fit all the vertex atributes that we want
+        meshArray.Resize((int)Mesh.ArrayType.Max);
 
+        // array that holds each vertex position
         Vector3[] vertices = new Vector3[_springs.Count];
+        // array that holds each vertex color
         Color[] colors = new Color[_springs.Count];
-
+        // array that holds each vertex position in 2D (only used for triangulation function)
         Vector2[] vertices2D = new Vector2[_springs.Count];
-
-
+        
+        // populate arrays
         for(int i = 0; i < _springs.Count; i++)
         {
             Vector2 s = _springs[i].Position;
-            vertices[i] = new Vector3(s.x, s.y, 0f);
             vertices2D[i] = new Vector2(s.x, s.y);
+            vertices[i] = new Vector3(s.x, s.y, 0f);
 
             colors[i] = Colors.White;
         }
 
+        // get the triangulated geometry indices
+        int[] indices = Geometry.TriangulateDelaunay2d(vertices2D);
 
-        int[] engineIndices = Geometry.TriangulateDelaunay2d(vertices2D);
-        GD.Print(engineIndices);
-        GD.Print(engineIndices.Length);
-
-        int[] indices = new int[48];
-
-        // create indices
-        int currentIndice = 0;
-        int currentSubDivison = 0;
-        int XSubs = 2;
-        int ZSubs = 4;
-        int nVerticesWidth = 3;
-        for (int z = 0; z < ZSubs; z++)
-        {
-            for (int x = 0; x < XSubs; x++)
-            {
-                /* calculate positions in the array
-                * 
-                *  1---2
-                *  | / |
-                *  4---3
-                *  
-                */
-
-                int vert1 = currentSubDivison + z;
-                int vert2 = vert1 + 1;
-                int vert3 = vert2 + nVerticesWidth;
-                int vert4 = vert3 - 1;
-
-                // first tri
-                indices[currentIndice++] = (short)vert1;
-                indices[currentIndice++] = (short)vert2;
-                indices[currentIndice++] = (short)vert4;
-
-                // secon tri
-                indices[currentIndice++] = (short)vert4;
-                indices[currentIndice++] = (short)vert2;
-                indices[currentIndice++] = (short)vert3;
-
-                currentSubDivison++;
-
-            }
-
-        }
-
-        arr[(int)Mesh.ArrayType.Vertex] = vertices;
-        arr[(int)Mesh.ArrayType.Color] = colors;
-        //arr[(int)Mesh.ArrayType.Index]  = indices;
-        arr[(int)Mesh.ArrayType.Index]  = engineIndices;
+        // fill in mesh array with the proper arrays
+        meshArray[(int)Mesh.ArrayType.Vertex] = vertices;
+        meshArray[(int)Mesh.ArrayType.Color] = colors;
+        meshArray[(int)Mesh.ArrayType.Index]  = indices;
         
-        _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arr);
+        // create surface and assign
+        _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, meshArray);
         _meshInstance.Mesh = _mesh;
 
     }
 
+    /// <summary>
+    /// This function updates the mesh with the current cape geometry.
+    /// </summary>
     public void UpdateMesh()
     {
         _mdt.CreateFromSurface(_mesh, 0);
 
+        // because we are using a viewport to render the mesh, the mesh position will be relative
+        // to the (0, 0) coordinate.
+        // we get the position of each cape vertex (springPoint) and translate it to the (0, 0)
+        // in this case, we just get the first spring position to get a translation vector
+        Vector2 transform = GetTranslation(_springs[0].GlobalPosition, new Vector2(0, 0));   
+
         int count = _mdt.GetVertexCount();
-        Vector2 transform = TransformTo(_springs[0].GlobalPosition, new Vector2(0, 0));        
         for(int i = 0; i < count; i++)
         {   
+            // apply translation
             Vector2 newPosition = _springs[i].GlobalPosition + transform;
             _mdt.SetVertex(i, new Vector3(newPosition.x, newPosition.y, 0f));
         }
@@ -133,7 +140,7 @@ public class Cape : SpringSystem
 
     }
 
-    public Vector2 TransformTo(Vector2 p1, Vector2 p2)
+    public Vector2 GetTranslation(Vector2 p1, Vector2 p2)
     {
         return p2 - p1;
     }
@@ -141,18 +148,34 @@ public class Cape : SpringSystem
     public override void _Process(float delta)
     {
         if(_node2Follow != null)
-        {
-            //Position = _node2Follow.Position;
+        {    
+            // if we are following, the anchor should follow as well
+            _anchor.GlobalPosition = _node2Follow.GlobalPosition + _anchorOffset;
 
+            // make the designated springs follow the node 
             for(int i = 0; i < _springs2Follow.Length; i++)
             {
-                _springs2Follow[i].GlobalPosition = _node2Follow.GlobalPosition + _offset[i];
+                _springs2Follow[i].GlobalPosition = _anchor.GlobalPosition + _offset[i];
             }
 
+            // and now, for each spring point, we update the base position.
+            // the base position is actually the original offset to its scene center
+            // We need to update this position, because we will want to use "LinearRestitution",
+            // that will basically make the spring go towards its initial position.
+            // we can not use the scene position, because its a simple Node, with no transform.
+            // this way, we can have the springs move freely in the game world, and be also a child 
+            // of the player. Hope this makes sense for the future me.
             for(int i = 0; i < _springs.Count; i++)
             {
-                _springs[i].SetBasePosition(_springs[0].Position + _springs[i].GetOriginalPosition());
+                // also, this only works because the _spring at position 0, is in the (0, 0) of the scene :)
+                _springs[i].SetBasePosition(_anchor.Position + _springs[i].GetOriginalPosition());
+                //_springs[i].SetBasePosition(_springs[0].Position + _springs[i].GetOriginalPosition());
             }
+
+            _capeSprite.GlobalPosition = _node2Follow.GlobalPosition;
+
+            // GD.Print($"{_anchor.Name}: pos: {_anchor.Position}, global: {_anchor.GlobalPosition}, offset: {_anchorOffset}");
+            // GD.Print($"{_springs[0].Name}: pos: {_springs[0].Position}, global: {_springs[0].GlobalPosition}, offset: {_offset[0]}");
 
         }
 
@@ -211,5 +234,22 @@ public class Cape : SpringSystem
             return 1;
         
         return -1;
+    }
+
+    public void SetDashing(bool dash)
+    {
+        for(int i = 0; i < _springs.Count; i++)
+        {
+            
+            if(dash)
+            {
+                _springs[i].MaxVelocity = 800f;
+            } else
+            {
+                _springs[i].MaxVelocity = _springs[i].GetOriginalMaxVelocity();
+
+            }
+        }
+
     }
 }

@@ -23,12 +23,9 @@ public class Player : BaseMob
     float ControllerDeadzone = 0.2f;
     [Export]
     float CameraExtendZone = 4f;
-    [Export]
-    public NodePath CapeNode;
-
 
     private Vector2 _velocity = Vector2.Zero;
-    private AnimatedSprite _animation;
+    private AnimatedSprite _animation;    
     private Position2D _weaponHandle;
     private HealthComponent _health;
     private InvulnerabilityComponent _invulnerability;
@@ -39,7 +36,7 @@ public class Player : BaseMob
     private FlashComponent _flash;
     private HitstopComponent _hitstop;
     private SpringSystem _hoodie;
-    private SpringSystem _cape;
+    private Cape _cape;
     private Sprite _capeSprite;
 
     private AudioStreamPlayer _hitsfx;
@@ -73,20 +70,17 @@ public class Player : BaseMob
         _flash = GetNode<FlashComponent>("FlashComponent");
         _hitstop = GetNode<HitstopComponent>("HitstopComponent");
         _hoodie = GetNode<SpringSystem>("Hoodie");
-        _cape   = GetNode<SpringSystem>(CapeNode);
-        _capeSprite = GetNode<Sprite>("CapeSprite");
-
-        _capeSprite.Texture = _cape.GetNode<Viewport>("Viewport").GetTexture();
+        _cape   = GetNode<Cape>("Cape");
 
         _hitsfx = GetNode<AudioStreamPlayer>("HitSfx");
 
         _health.Connect("Died", this, nameof(OnPlayerDead));
         _invulnerability.Connect("InvulnerabilityLifted", this, nameof(OnInvulnerabilityLifted));
         _damage.Connect("DamageTaken", this, nameof(OnDamageTaken));
+        _dash.Connect("DashStop", this, "OnDashStop");
 
         CameraFocusPoint = Vector2.Right * CameraExtendZone;
 
-        GD.Print("player ready: pause mode is: " + GetTree().Paused);
         GetTree().Paused = false;
 
     }
@@ -151,8 +145,6 @@ public class Player : BaseMob
             _weaponHandle.Scale = new Vector2(1, 1);
             _animation.FlipH = false;
             _hoodie.MirrorHorizontal(-1);
-
-
         }
 
         if(Input.IsActionJustPressed("player_attack") && !_dash.IsDashing)
@@ -165,7 +157,11 @@ public class Player : BaseMob
             // should the hero dash in the input direction
             // or in the poiting direction
             //_dash.Dash(LastRightAxis);
-            bool success = _dash.Dash(_lastDirection);            
+            bool success = _dash.Dash(_lastDirection);
+            if(success)
+            {
+                _cape.SetDashing(true);
+            }
         }
 
         if(Input.IsActionJustPressed("reset"))
@@ -221,6 +217,7 @@ public class Player : BaseMob
         _velocity = MoveAndSlide(_velocity);
 
         AddClothForce();
+        _cape.SetDashing(_dash.IsDashing);
 
         base._PhysicsProcess(delta);
 
@@ -233,6 +230,7 @@ public class Player : BaseMob
 
         _cape.AddForce(capeClothingForce, true, CapeInfluenceRandom);
         _hoodie.AddForce(hoodieClothingForce, true, HoodieInfluenceRandom);        
+
     }
 
     public override void _Input(InputEvent @event)
@@ -249,6 +247,11 @@ public class Player : BaseMob
         base._Input(@event);
     }
 
+    public void OnDashStop()
+    {
+        _cape.SetDashing(false);
+    }
+
     public void OnPlayerDead(int health)
     {
         GetTree().ChangeScene(GetTree().CurrentScene.Filename);        
@@ -257,7 +260,6 @@ public class Player : BaseMob
     public void OnInvulnerabilityLifted()
     {
         _animation.Modulate = Colors.White;
-        //GD.Print($"player is now vulnerable.");
     }
     
     public void OnDamageTaken(Damage damageInfo)

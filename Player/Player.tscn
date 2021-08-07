@@ -14,7 +14,7 @@
 [ext_resource path="res://Sfx/Creature_action_attack_gore_01.wav" type="AudioStream" id=12]
 [ext_resource path="res://Player/SpringSystem.cs" type="Script" id=13]
 [ext_resource path="res://Player/SpringPoint.cs" type="Script" id=14]
-[ext_resource path="res://Player/CapeMaterial.tres" type="Material" id=15]
+[ext_resource path="res://Player/Cape.tscn" type="PackedScene" id=16]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -86,12 +86,9 @@ collision_layer = 2
 script = ExtResource( 3 )
 Speed = 100.0
 
-[node name="CapeSprite" type="Sprite" parent="."]
-material = ExtResource( 15 )
-position = Vector2( 0, -15 )
-
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 visible = false
+z_index = 10
 frames = SubResource( 12 )
 animation = "idle"
 offset = Vector2( 0, -10 )
@@ -110,6 +107,7 @@ __meta__ = {
 
 [node name="WeaponHandle" type="Position2D" parent="."]
 position = Vector2( 0, -10 )
+z_index = 10
 __meta__ = {
 "_edit_lock_": true
 }
@@ -117,22 +115,6 @@ __meta__ = {
 [node name="SimpleSword" parent="WeaponHandle" instance=ExtResource( 4 )]
 position = Vector2( 5, 1 )
 Damage = 2
-CanCancel = false
-
-[node name="Sprite" parent="WeaponHandle/SimpleSword" index="0"]
-position = Vector2( 0, 0 )
-rotation = -1.309
-
-[node name="DashEffect" parent="WeaponHandle/SimpleSword" index="1"]
-position = Vector2( 2, 1 )
-scale = Vector2( 0.546737, 0.546737 )
-
-[node name="DamageComponent" parent="WeaponHandle/SimpleSword" index="2"]
-visible = false
-GroupsToDamage = null
-
-[node name="HitstopComponent" parent="WeaponHandle/SimpleSword" index="5"]
-FreezeFrames = 4
 
 [node name="DamageComponent" parent="." instance=ExtResource( 7 )]
 visible = false
@@ -202,14 +184,8 @@ UseLimits = true
 PositionLimits = Rect2( 0, 0, 10, 10 )
 Connections = [ NodePath("../SpringPoint3") ]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-smoothing_enabled = true
-smoothing_speed = 3.0
-drag_margin_left = 0.1
-drag_margin_top = 0.1
-drag_margin_right = 0.1
-drag_margin_bottom = 0.1
-editor_draw_screen = false
+[node name="CapeAnchor" type="Position2D" parent="."]
+position = Vector2( 0, -14 )
 
-[editable path="WeaponHandle/SimpleSword"]
+[node name="Cape" parent="." instance=ExtResource( 16 )]
+NodeToFollow = NodePath("../CapeAnchor")

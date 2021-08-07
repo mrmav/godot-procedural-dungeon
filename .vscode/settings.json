@@ -12,5 +12,6 @@
         "System.StackOverflowException": "always",
         "System.SystemException": "always",
         "System.TypeInitializationException": "always"
-    }
+    },
+    "godot_tools.editor_path": "c:\\Godot\\Godot_v3.3.2-stable_mono_win64.exe"
 }
