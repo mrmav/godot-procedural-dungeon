@@ -13,6 +13,9 @@ public class Cape : SpringSystem
     [Export]
     public NodePath Anchor;
 
+    [Export]
+    public float SpringsMaxVelocityOnDash = 600f;
+
     // this mesh instance is the resulting cape mesh
     private MeshInstance2D _meshInstance;
 
@@ -243,7 +246,7 @@ public class Cape : SpringSystem
             
             if(dash)
             {
-                _springs[i].MaxVelocity = 800f;
+                _springs[i].MaxVelocity = SpringsMaxVelocityOnDash;
             } else
             {
                 _springs[i].MaxVelocity = _springs[i].GetOriginalMaxVelocity();

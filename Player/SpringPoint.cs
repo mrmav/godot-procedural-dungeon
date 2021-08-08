@@ -4,25 +4,28 @@ using System.Collections.Generic;
 public class SpringPoint : Node2D
 {
     [Export]
+    /// <summary>
+    /// The general dampening applied to the velocity
+    /// </summary>
     public float Dampening = 0.8f;
 
     [Export]
     public Vector2 Gravity = Vector2.Zero;
 
     [Export]
-    public float Stiffness = 10;
+    public float Stiffness = 12f;
 
     [Export]
-    public float Mass = 24f;
+    public float Mass = 4f;
 
     [Export]
     public float SpringStrength = 0.5f;
 
     [Export]
-    public float OriginalDistanceMult = 0.5f;
+    public float LinearRestitutionDampening = 0.001f;
 
     [Export]
-    public float LinearRestitutionDampening = 0.001f;
+    public float JointForceMult = 0.001f;
 
     [Export]
     public float MaxVelocity = 400f;
@@ -74,16 +77,11 @@ public class SpringPoint : Node2D
 
             if(!IsPinned)
             {
-            
-                Vector2 springForces = Vector2.Zero;
-                for(int i = 0; i < SpringConnections.Count; i++)
-                {
-                    springForces += GetSpringForce(this, SpringConnections[i], _originalDistances[i] * OriginalDistanceMult, Stiffness) * SpringStrength;
-                }
-
+                
                 AddForce(Gravity, false);
-                AddForce(springForces, false);
+                AddForce(GetSpringForce(), false);
                 AddForce(GetLinearRestitution(LinearRestitutionDampening) * (1f / delta), false);                
+                AddForce(GetJointForces(JointForceMult), false);
 
                 _velocity += _acceleration;
                 _velocity *= Dampening;
@@ -108,8 +106,6 @@ public class SpringPoint : Node2D
 
             }
 
-            //Update();
-
         }
 
     }
@@ -130,30 +126,69 @@ public class SpringPoint : Node2D
         _acceleration += (force + rand) / Mass;
     }
 
-    public Vector2 GetSpringForce(SpringPoint a, SpringPoint b, float targetLength, float resistance)
+    /// <summary>
+    /// Calculates the force to be applied with a spring behaviour.
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 GetSpringForce()
     {
+
+        Vector2 force = Vector2.Zero;
+        for(int i = 0; i < SpringConnections.Count; i++)
+        {            
+            Vector2 dir = (Position - SpringConnections[i].Position);
+
+            float strength = -1 * Stiffness * (dir.Length() - _originalDistances[i]);
+
+            force += dir.Normalized() * strength;
+        }
+        
+        return force * SpringStrength;
+    }
+
+    /// <summary>
+    /// Calculates the linear force to be applied so the point returns to the original position.
+    /// This method is usefull to limit some behaviour.
+    /// </summary>
+    /// <param name="damp"></param>
+    /// <returns></returns>
+    public Vector2 GetLinearRestitution(float damp)
+    {
+        return (_basePosition - Position) * damp;
+    }
+
+    /// <summary>
+    /// Calculates point force as if it is a joint.
+    /// </summary>
+    /// <param name="damp"></param>
+    /// <returns>The force to be applied to maintain the joint.</returns>
+    public Vector2 GetJointForces(float damp)
+    {
+
         Vector2 result = Vector2.Zero;
-        Vector2 dir = (a.Position - b.Position);
 
-        float strength = -1 * resistance * (dir.Length() - targetLength);
+        for(int i = 0; i < SpringConnections.Count; i++)
+        {
+            Vector2 dir = SpringConnections[i].Position - Position;
+            float length = dir.Length();
+            float target = _originalDistances[i];
 
-        result = dir.Normalized() * strength;
+            result += dir * (length - target) * damp;
+
+        }
 
         return result;
     }
 
-    public Vector2 GetLinearRestitution(float damp)
-    {
-
-        return (_basePosition - Position) * damp;
-        
-    }
-
+    /// <summary>
+    /// Clamps the position to the bound limits.
+    /// </summary>
+    /// <returns>The clamped position</returns>
     private Vector2 ClampPosition()
     {
 
         Vector2 b = GetLimitBegin();
-        Vector2 e = getLimitEnd();
+        Vector2 e = GetLimitEnd();
 
         Vector2 pos = Position;
 
@@ -184,11 +219,16 @@ public class SpringPoint : Node2D
         return pos;
     }
 
+    /// <summary>
+    /// Limits the velocity to 0f, on the direction that left the bounds.
+    /// </summary>
+    /// <param name="velocity">The resulting velocity</param>
+    /// <returns></returns>
     private Vector2 CheckVelocityLimits(Vector2 velocity)
     {
 
         Vector2 b = GetLimitBegin();
-        Vector2 e = getLimitEnd();
+        Vector2 e = GetLimitEnd();
 
         Vector2 force = velocity;
 
@@ -216,7 +256,7 @@ public class SpringPoint : Node2D
         return new Vector2(min_x, min_y);
     }
 
-    public Vector2 getLimitEnd()
+    public Vector2 GetLimitEnd()
     {
         float max_x = _originalPosition.x + PositionLimits.Position.x + PositionLimits.Size.x / 2f;
         float max_y = _originalPosition.y + PositionLimits.Position.y + PositionLimits.Size.y / 2f;
@@ -225,14 +265,14 @@ public class SpringPoint : Node2D
 
     }
 
-    // public void RefreshBasePosition(Vector2 pos)
-    // {
-    //     _originalPosition = pos;
-    // }
-
     public Vector2 GetOriginalPosition()
     {
         return _originalPosition;
+    }
+
+    public void SetBasePosition(Vector2 pos)
+    {
+        _basePosition = pos;
     }
 
     public Vector2 GetVelocity()
@@ -240,10 +280,6 @@ public class SpringPoint : Node2D
         return _velocity;
     }
 
-    public void SetBasePosition(Vector2 pos)
-    {
-        _basePosition = pos;
-    }
 
     public float GetOriginalMaxVelocity()
     {
