@@ -272,8 +272,8 @@ public class Player : BaseMob
             _flash.SetFlash(true);
             _hitsfx.Play();
             _hitstop.StartFreeze();
-            _hoodie.AddForce(damageInfo.Normal * -60);
-            _cape.AddForce(damageInfo.Normal * -10);
+            _hoodie.AddForce(damageInfo.Normal * -60f);
+            _cape.AddForce(damageInfo.Normal * -10f);
         }
         
     }

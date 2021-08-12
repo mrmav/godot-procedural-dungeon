@@ -52,6 +52,7 @@ public class SpringPoint : Node2D
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _acceleration = Vector2.Zero;
     private float _originalMaxVelocity;
+    private float _originalLinearRestitution;
 
     private SpringSystem _parent;
         
@@ -63,6 +64,7 @@ public class SpringPoint : Node2D
         _originalPosition = Position;
         _basePosition = Position;
         _originalMaxVelocity = MaxVelocity;
+        _originalLinearRestitution = LinearRestitutionDampening;
 
         _originalDistances = new float[Connections.Count];
 
@@ -105,11 +107,34 @@ public class SpringPoint : Node2D
 
                 _acceleration = Vector2.Zero;
                 
-                if(_velocity.Length() > MaxVelocity)
+                // there is a behaviour not intended with max velocity:
+                // when receiveing a force (eg.:_knockback), the max velocity
+                // limits the spring return to it's original position
+                // I'll try to fix this by not limiting the velocity
+                // if we are to far away from the goal position
+
+                float originalDistancesCumulative = 0f;
+                float currentDistancesCumulative = 0f;
+                for(int i = 0; i < SpringConnections.Count; i++)
                 {
-                    _velocity = _velocity.Normalized() * MaxVelocity;
+                    originalDistancesCumulative += _originalDistances[i];
+                    currentDistancesCumulative += Mathf.Abs((GlobalPosition - SpringConnections[i].GlobalPosition).Length());
                 }
-            
+
+                // now we have the cumulative distances
+                // let's check how far apart are them
+                float diffPercent = Mathf.Abs(currentDistancesCumulative / originalDistancesCumulative - 1f);
+                float maxVelocityThreshold = 0.2f;
+
+                // only cap the velocity if we are within the defined distance threshold
+                if(diffPercent < maxVelocityThreshold)
+                {
+                    if(_velocity.Length() > MaxVelocity)
+                    {
+                        _velocity = _velocity.Normalized() * MaxVelocity;
+                    }
+                }
+
                 if(UseLimits)
                 {
                     _velocity = CheckVelocityLimits(_velocity);
@@ -301,6 +326,11 @@ public class SpringPoint : Node2D
     public float GetOriginalMaxVelocity()
     {
         return _originalMaxVelocity;
+    }
+
+    public float GetOriginalLinearRestitution()
+    {
+        return _originalLinearRestitution;
     }
 
 

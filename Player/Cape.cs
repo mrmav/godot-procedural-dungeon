@@ -232,9 +232,11 @@ public class Cape : SpringSystem
             if(dash)
             {
                 _springs[i].MaxVelocity = SpringsMaxVelocityOnDash;
+                //_springs[i].LinearRestitutionDampening = 0f;
             } else
             {
                 _springs[i].MaxVelocity = _springs[i].GetOriginalMaxVelocity();
+                //_springs[i].LinearRestitutionDampening = _springs[i].GetOriginalLinearRestitution();
 
             }
         }
