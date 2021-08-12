@@ -42,17 +42,23 @@ public class SpringPoint : Node2D
     [Export]
     public List<NodePath> Connections;
 
-    private float[] _originalDistances;
     public List<SpringPoint> SpringConnections = new List<SpringPoint>();
-    
+    public Vector2 DebugDrawOffset = Vector2.Zero;
+
+
+    private float[] _originalDistances;
     private Vector2 _originalPosition = Vector2.Zero;
     private Vector2 _basePosition = Vector2.Zero;
     private Vector2 _velocity = Vector2.Zero;
     private Vector2 _acceleration = Vector2.Zero;
     private float _originalMaxVelocity;
-    
+
+    private SpringSystem _parent;
+        
     public override void _Ready()
     {
+
+        _parent = GetParent<SpringSystem>();
 
         _originalPosition = Position;
         _basePosition = Position;
@@ -69,6 +75,17 @@ public class SpringPoint : Node2D
 
     }
 
+    public override void _Process(float delta)
+    {
+
+        if(GetParent<SpringSystem>().ShowDebugGeometry)
+        {           
+            Update();
+        }
+
+        base._Process(delta);
+    }
+
     public override void _PhysicsProcess(float delta)
     {   
 
@@ -77,7 +94,7 @@ public class SpringPoint : Node2D
 
             if(!IsPinned)
             {
-                
+
                 AddForce(Gravity, false);
                 AddForce(GetSpringForce(), false);
                 AddForce(GetLinearRestitution(LinearRestitutionDampening) * (1f / delta), false);                
@@ -286,5 +303,31 @@ public class SpringPoint : Node2D
         return _originalMaxVelocity;
     }
 
+
+    public override void _Draw()
+    {
+        
+        if(_parent.ShowDebugGeometry)
+        {
+
+            DrawCircle(_parent.DebugDrawOffset, .5f, Colors.Green);
+
+            for(int i = 0; i < SpringConnections.Count; i++)
+            {            
+                DrawLine(_parent.DebugDrawOffset, SpringConnections[i].Position - Position + _parent.DebugDrawOffset, Colors.OrangeRed, .5f, false);
+            }
+
+            if(UseLimits)
+            {
+                Rect2 r = new Rect2(GetLimitBegin(), PositionLimits.Size);
+                DrawRect(r, Colors.RoyalBlue, false, 1f, true);
+            }
+
+            DrawLine(_parent.DebugDrawOffset, _velocity * 0.1f + _parent.DebugDrawOffset, Colors.Purple, 1f, false);
+
+        }
+
+        base._Draw();
+    }
 
 }

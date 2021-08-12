@@ -32,174 +32,204 @@ __meta__ = {
 }
 
 [node name="SpringPointFixed2" type="Node2D" parent="."]
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 9.8 )
 SpringStrength = 1.0
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 IsPinned = true
 Connections = [  ]
 
 [node name="SpringPointFixed1" type="Node2D" parent="."]
 position = Vector2( -4, 2 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 9.8 )
 SpringStrength = 1.0
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 IsPinned = true
 Connections = [  ]
 
 [node name="SpringPointFixed3" type="Node2D" parent="."]
 position = Vector2( 4, 2 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.8
 Gravity = Vector2( 0, 9.8 )
 SpringStrength = 1.0
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 IsPinned = true
 Connections = [  ]
 
 [node name="SpringPoint1_1" type="Node2D" parent="."]
 position = Vector2( -6, 4 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPointFixed1"), NodePath("../SpringPoint1_2") ]
 
 [node name="SpringPoint1_2" type="Node2D" parent="."]
 position = Vector2( 0, 3 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPointFixed2"), NodePath("../SpringPoint1_1"), NodePath("../SpringPoint1_3") ]
 
 [node name="SpringPoint1_3" type="Node2D" parent="."]
 position = Vector2( 6, 4 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPointFixed3"), NodePath("../SpringPoint1_2") ]
 
 [node name="SpringPoint2_1" type="Node2D" parent="."]
 position = Vector2( -6, 6 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint1_1"), NodePath("../SpringPoint2_2") ]
 
 [node name="SpringPoint2_2" type="Node2D" parent="."]
 position = Vector2( 0, 5 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint2_1"), NodePath("../SpringPoint1_2"), NodePath("../SpringPoint2_3") ]
 
 [node name="SpringPoint2_3" type="Node2D" parent="."]
 position = Vector2( 6, 6 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint2_2"), NodePath("../SpringPoint1_3") ]
 
 [node name="SpringPoint3_1" type="Node2D" parent="."]
 position = Vector2( -6, 8 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint2_1"), NodePath("../SpringPoint3_2") ]
 
 [node name="SpringPoint3_2" type="Node2D" parent="."]
 position = Vector2( 0, 7 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint3_1"), NodePath("../SpringPoint2_2"), NodePath("../SpringPoint3_3") ]
 
 [node name="SpringPoint3_3" type="Node2D" parent="."]
 position = Vector2( 6, 8 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint3_2"), NodePath("../SpringPoint2_3") ]
 
 [node name="SpringPoint4_1" type="Node2D" parent="."]
 position = Vector2( -6, 10 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint3_1"), NodePath("../SpringPoint4_2") ]
 
 [node name="SpringPoint4_2" type="Node2D" parent="."]
 position = Vector2( 0, 10 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint4_1"), NodePath("../SpringPoint4_3"), NodePath("../SpringPoint3_2") ]
 
 [node name="SpringPoint4_3" type="Node2D" parent="."]
 position = Vector2( 6, 10 )
+z_index = 99
+z_as_relative = false
 script = ExtResource( 1 )
 Dampening = 0.825
 Gravity = Vector2( 0, 8 )
 Mass = 2.0
 SpringStrength = 0.2
-LinearRestitutionDampening = 0.1
+LinearRestitutionDampening = 0.0
 JointForceMult = 1.0
 MaxVelocity = 100.0
 Connections = [ NodePath("../SpringPoint3_3"), NodePath("../SpringPoint4_2") ]

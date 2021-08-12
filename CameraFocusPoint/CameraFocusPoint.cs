@@ -20,6 +20,8 @@ public class CameraFocusPoint : Position2D
         _camera.SmoothingEnabled = false;
         GlobalPosition = _node.CameraFocusPoint;
         _camera.SmoothingEnabled = smooth;
+
+        _camera.AddToGroup("cameras");
     }
 
     public override void _Process(float delta)

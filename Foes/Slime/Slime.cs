@@ -53,7 +53,7 @@ public class Slime : KinematicBody2D
         _detectArea = GetNode<Area2D>("DetectArea");
         _newTargetTimer = GetNode<Timer>("NewTargetTimer");
         _walkDurationTimer = GetNode<Timer>("WalkingDurationTimer");
-        _targetFoe = GetParent().GetNode<KinematicBody2D>("Player");
+        _targetFoe = GetNode<KinematicBody2D>("../Player");
         _damage = GetNode<DamageComponent>("DamageComponent");
         _health = GetNode<HealthComponent>("HealthComponent");
         _knockback = GetNode<KnockbackComponent>("KnockbackComponent");

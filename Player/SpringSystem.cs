@@ -8,6 +8,8 @@ public class SpringSystem : Node
     [Export]
     public bool ShowDebugGeometry = false;
 
+    public Vector2 DebugDrawOffset = Vector2.Zero;
+
     protected List<SpringPoint> _springs = new List<SpringPoint>();
 
     public override void _Ready()
@@ -50,41 +52,5 @@ public class SpringSystem : Node
             _springs[i].SetBasePosition(pos);
         }
     }
-
-    // public override void _Draw()
-    // {
-    //     if(ShowDebugGeometry)
-    //     {
-    //         for(int i = 0; i < _springs.Count; i++)
-    //         {
-    //             Debug(_springs[i]);
-    //         }
-    //     }
-
-    //     base._Draw();
-    // }
-
-    
-    // public void Debug(SpringPoint spring)
-    // {
-    //     // Transform2D inverse = Transform.Inverse();
-    //     // DrawSetTransformMatrix(inverse);
-
-    //     DrawCircle(spring.Position, .5f, Colors.Green);
-
-    //     for(int i = 0; i < spring.SpringConnections.Count; i++)
-    //     {            
-    //         DrawLine(spring.Position, spring.SpringConnections[i].Position, Colors.OrangeRed, .5f, false);
-    //     }
-
-    //     if(spring.UseLimits)
-    //     {
-    //         Rect2 r = new Rect2(spring.GetLimitBegin(), spring.PositionLimits.Size);
-    //         DrawRect(r, Colors.RoyalBlue, false, 1f, true);
-    //     }
-
-    //     DrawLine(spring.Position, spring.Position + spring.GetVelocity(), Colors.Purple, 1f, false);
-
-    // }
 
 }

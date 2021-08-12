@@ -11,9 +11,6 @@ public class Cape : SpringSystem
     public List<NodePath> SpringsToFollow;
 
     [Export]
-    public NodePath Anchor;
-
-    [Export]
     public float SpringsMaxVelocityOnDash = 600f;
 
     // this mesh instance is the resulting cape mesh
@@ -40,7 +37,6 @@ public class Cape : SpringSystem
     private Position2D _anchor;
     private Vector2 _anchorOffset;
 
-
     // the sprite to show the cape texture
     private Sprite _capeSprite;
 
@@ -50,17 +46,10 @@ public class Cape : SpringSystem
 
         _node2Follow = GetNode<Node2D>(NodeToFollow);
 
-        // define an anchor for the cloth system
-        if(Anchor == null)
-        {
-            _anchor = new Position2D();
-            _anchor.Position = Vector2.Zero;
-            AddChild(_anchor);
-            
-        } else
-        {
-            _anchor = GetNode<Position2D>(Anchor);
-        }
+        _anchor = new Position2D();
+        _anchor.GlobalPosition = Vector2.Zero;
+        AddChild(_anchor);
+
         _anchorOffset = _anchor.GlobalPosition - _node2Follow.GlobalPosition;
 
         // init arrays 
@@ -114,7 +103,9 @@ public class Cape : SpringSystem
         // create surface and assign
         _mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, meshArray);
         _meshInstance.Mesh = _mesh;
-
+        
+        DebugDrawOffset = GetTranslation(_anchor.Position, _node2Follow.GlobalPosition); 
+        
     }
 
     /// <summary>
@@ -126,15 +117,15 @@ public class Cape : SpringSystem
 
         // because we are using a viewport to render the mesh, the mesh position will be relative
         // to the (0, 0) coordinate.
-        // we get the position of each cape vertex (springPoint) and translate it to the (0, 0)
-        // in this case, we just get the first spring position to get a translation vector
-        Vector2 transform = GetTranslation(_springs[0].GlobalPosition, new Vector2(0, 0));   
-
+        // here we calculate a vector to transform everything to the (0, 0)
+        // based on the anchor position
+        Vector2 transform = GetTranslation(_anchor.Position, new Vector2(0, 0));          
+        
         int count = _mdt.GetVertexCount();
         for(int i = 0; i < count; i++)
         {   
             // apply translation
-            Vector2 newPosition = _springs[i].GlobalPosition + transform;
+            Vector2 newPosition = _springs[i].Position + transform;
             _mdt.SetVertex(i, new Vector3(newPosition.x, newPosition.y, 0f));
         }
 
@@ -149,42 +140,36 @@ public class Cape : SpringSystem
     }
 
     public override void _Process(float delta)
-    {
-        if(_node2Follow != null)
-        {    
-            // if we are following, the anchor should follow as well
-            _anchor.GlobalPosition = _node2Follow.GlobalPosition + _anchorOffset;
+    {        
+        // if we are following, the anchor should follow as well
+        _anchor.GlobalPosition = _node2Follow.GlobalPosition + _anchorOffset;
 
-            // make the designated springs follow the node 
-            for(int i = 0; i < _springs2Follow.Length; i++)
-            {
-                _springs2Follow[i].GlobalPosition = _anchor.GlobalPosition + _offset[i];
-            }
-
-            // and now, for each spring point, we update the base position.
-            // the base position is actually the original offset to its scene center
-            // We need to update this position, because we will want to use "LinearRestitution",
-            // that will basically make the spring go towards its initial position.
-            // we can not use the scene position, because its a simple Node, with no transform.
-            // this way, we can have the springs move freely in the game world, and be also a child 
-            // of the player. Hope this makes sense for the future me.
-            for(int i = 0; i < _springs.Count; i++)
-            {
-                // also, this only works because the _spring at position 0, is in the (0, 0) of the scene :)
-                _springs[i].SetBasePosition(_anchor.Position + _springs[i].GetOriginalPosition());
-                //_springs[i].SetBasePosition(_springs[0].Position + _springs[i].GetOriginalPosition());
-            }
-
-            _capeSprite.GlobalPosition = _node2Follow.GlobalPosition;
-
-            // GD.Print($"{_anchor.Name}: pos: {_anchor.Position}, global: {_anchor.GlobalPosition}, offset: {_anchorOffset}");
-            // GD.Print($"{_springs[0].Name}: pos: {_springs[0].Position}, global: {_springs[0].GlobalPosition}, offset: {_offset[0]}");
-
+        // make the designated springs follow the node             
+        for(int i = 0; i < _springs2Follow.Length; i++)
+        {
+            _springs2Follow[i].GlobalPosition = _anchor.GlobalPosition + _offset[i];
         }
 
-        //_meshInstance.GlobalPosition = new Vector2(64, 64);
+        // and now, for each spring point, we update the base position.
+        // the base position is actually the original offset to its scene center
+        // We need to update this position, because we will want to use "LinearRestitution",
+        // that will basically make the spring go towards its initial position.
+        // we can not use the scene position, because its a simple Node, with no transform.
+        // this way, we can have the springs move freely in the game world, and be also a child 
+        // of the player. Hope this makes sense for the future me.
+        for(int i = 0; i < _springs.Count; i++)
+        {
+            // also, this only works because the _spring at position 0, is in the (0, 0) of the scene :)
+            _springs[i].SetBasePosition(_anchor.GlobalPosition + _springs[i].GetOriginalPosition());
+            
+        }
+
+        // finally, put the sprite in it's correct location
+        _capeSprite.GlobalPosition = _node2Follow.GlobalPosition;
 
         UpdateMesh();
+
+
 
         base._Process(delta);
     }
